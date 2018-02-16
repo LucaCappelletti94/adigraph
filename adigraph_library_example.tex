@@ -1,0 +1,36 @@
+\documentclass{report}
+
+\usepackage{adigraph}
+
+\newcommand{\smartGraphWrapper}[1]{
+    \smartGraph{
+        a,2,2;
+        b,4,0;
+        c,0,4;
+        d,4,4;
+        e,-2,2;
+        f,6,2;
+        g,2,6;
+    }{#1}
+}
+
+\begin{document}
+
+Questo package richiede i pacchetti fp, xparse, xstring e tikz.\\
+\\
+Nella lista $1,a,1,2;$ il primo ed il secondo termine indicano i nodi da cui parte il flusso e dove esso arriva, mentre il terzo ed il quarto indicano il flusso che vi scorre. Il quinto parametro, se indicato, colora il flusso.
+
+\begin{figure}
+    \center
+    \smartGraphWrapper{
+        b,a;
+        c,a,1,2;
+        d,a,1,2,1;
+        e,a,1,0,1;
+        f,a,1;
+        g,a,1,2;
+    }
+\end{figure}
+
+\textbf{Luca Cappelletti}
+\end{document}

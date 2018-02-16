@@ -1,0 +1,239 @@
+%
+%% This program can be redistributed and/or modified under the terms
+%% of the LaTeX Project Public License Distributed from CTAN archives
+%% in directory macros/latex/base/lppl.txt.
+%
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{adigraph}
+  [2018/02/16 v0.01 LaTeX package for creating augmenting directed graphs]
+
+\RequirePackage{fp}
+\RequirePackage{xparse}
+\RequirePackage{xstring}
+\RequirePackage{tikz}
+
+\def\zero{0}
+
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+
+\NewDocumentCommand{\storeCoordinate}{m m m}{
+  \@namedef{adigraphNode#1#2}{#3}%
+}
+\makeatother
+
+\newcommand{\saveNodeCoordinate}[3]{
+  %
+  % #1 -> Node name
+  % #2 -> Coordinate, either X or Y
+  % #3 -> Numeric value
+  %
+  \IfInteger{#1}{%
+    \def\nodeName{\rom{#1}}%
+  }{%
+    \def\nodeName{#1}%
+  }%
+  \storeCoordinate{#2}{\nodeName}{#3}
+}
+
+\newcommand{\retrieveNodeCoordinate}[3]{
+  %
+  % #1 -> Variable to store coordinate into
+  % #2 -> Node name
+  % #3 -> Coordinate, either X or Y
+  %
+  \IfInteger{#2}{%
+    \def\nodeName{\rom{#2}}%
+  }{%
+    \def\nodeName{#2}%
+  }%
+
+  \FPset{#1}{\csname adigraphNode#3\nodeName\endcsname}
+}
+
+\newcommand{\saveNodeCoordinates}[3]{
+  %
+  % #1 -> Node name
+  % #2 -> X value
+  % #3 -> Y value
+  %
+  \saveNodeCoordinate{#1}{X}{#2}%
+  \saveNodeCoordinate{#1}{Y}{#3}%
+}
+
+\newcommand{\swp}[3]{
+  %
+  % #1 -> variable to assign
+  % #2 -> First node name
+  % #3 -> Second node name
+  %
+  \retrieveNodeCoordinate{\firstX}{#2}{X}
+  \retrieveNodeCoordinate{\firstY}{#2}{Y}
+  \retrieveNodeCoordinate{\secondX}{#3}{X}
+  \retrieveNodeCoordinate{\secondY}{#3}{Y}
+  %
+  \FPsub{\xSub}{\secondX}{\firstX}
+  \FPsub{\ySub}{\secondY}{\firstY}
+  \FPset{#1}{1}
+  \FPifpos{\xSub}
+    \FPset{#1}{3}
+  \else
+    \FPset{#1}{4}
+  \fi
+  %
+  \FPifzero\xSub
+    \FPset{\xiszero}{1}
+  \else
+    \FPset{\xiszero}{0}
+  \fi
+  %
+  \FPifpos{\ySub}
+    \FPset{\yispos}{1}
+  \else
+    \FPset{\yispos}{4}
+  \fi
+  %
+  \FPadd{\xzeroypos}{\xiszero}{\yispos}
+  \FPclip{\xzeroypos}{\xzeroypos}
+  %
+  \FPifeq{\xzeroypos}{2}
+    \FPset{#1}{1}
+  \fi
+  \FPifeq{\xzeroypos}{5}
+    \FPset{#1}{2}
+  \fi
+}
+
+\newcommand{\executeNodeBuilder}[4]{
+  %
+  % #1 is node name
+  % #2 is x coordinate
+  % #3 is y coordinate
+  % #4 is label, that defaults to #1 when absent
+  %
+  \IfValueT{#2}{
+    \IfValueTF{#4}{
+      \def\nodeLabel{#4}
+    }{
+      \def\nodeLabel{#1}
+    }
+    \saveNodeCoordinates{#1}{#2}{#3}
+    \node[vertex] (#1) at (#2,#3) {$\nodeLabel$};
+  }
+}
+
+\NewDocumentCommand{\nodeBuilder}{ > { \SplitArgument { 3 } { , } } m }{
+  \executeNodeBuilder #1
+}
+
+\newcommand{\executeEdgeBuilder}[5]{
+  %
+  % #1 is first node
+  % #2 is second node
+  % #3 is weight of first edge, which defaults to 0
+  % #4 is weight of second edge, which defaults to 0
+  % #5 Should we color edge?
+  %
+  \IfValueT{#2}{
+    \def\firstNode{#1}
+    \def\secondNode{#2}
+    \IfValueTF{#3}{
+      \def\firstEdgeWeight{#3}
+    }{
+      \def\firstEdgeWeight{0}
+    }
+    \IfValueTF{#4}{
+      \def\secondEdgeWeight{#4}
+    }{
+      \def\secondEdgeWeight{0}
+    }
+    \IfValueTF{#5}{
+      \def\firstEdgeColor{red}
+      \def\secondEdgeColor{blue}
+    }{
+      \def\firstEdgeColor{black}
+      \def\secondEdgeColor{black}
+    }
+
+    \FPadd{\weightSum}{\firstEdgeWeight}{\secondEdgeWeight}
+    \FPmul{\weightMul}{\firstEdgeWeight}{\secondEdgeWeight}
+    \FPadd{\firstZero}{\weightMul}{\firstEdgeWeight}
+    \FPadd{\secondZero}{\weightMul}{\secondEdgeWeight}
+    \FPclip{\weightSum}{\weightSum}
+    \FPclip{\weightMul}{\weightMul}
+
+    \swp{\firstWeightPositionFlag}{#1}{#2}
+    \swp{\secondWeightPositionFlag}{#2}{#1}
+
+    \FPifeq{\firstWeightPositionFlag}{1}
+      \def\firstWeightPosition{left}
+    \fi
+    \FPifeq{\firstWeightPositionFlag}{2}
+      \def\firstWeightPosition{right}
+    \fi
+    \FPifeq{\firstWeightPositionFlag}{3}
+      \def\firstWeightPosition{above}
+    \fi
+    \FPifeq{\firstWeightPositionFlag}{4}
+      \def\firstWeightPosition{below}
+    \fi
+
+    \FPifeq{\secondWeightPositionFlag}{1}
+      \def\secondWeightPosition{left}
+    \fi
+    \FPifeq{\secondWeightPositionFlag}{2}
+      \def\secondWeightPosition{right}
+    \fi
+    \FPifeq{\secondWeightPositionFlag}{3}
+      \def\secondWeightPosition{above}
+    \fi
+    \FPifeq{\secondWeightPositionFlag}{4}
+      \def\secondWeightPosition{below}
+    \fi
+
+    \FPifzero{\weightSum}
+      % No edge has weights, so we draw both with no labels.
+      \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] (\secondNode);
+      \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] (\firstNode);
+    \else
+    \FPifzero{\secondZero}
+      \draw[edge,\firstEdgeColor] (\firstNode) to node[\secondWeightPosition] {$\firstEdgeWeight$}(\secondNode);
+    \else
+    \FPifzero{\firstZero}
+      \draw[edge,\firstEdgeColor] (\secondNode) to node[\firstWeightPosition] {$\secondEdgeWeight$}(\firstNode);
+    \fi
+    \FPifzero{\weightMul}
+    \else
+      % No edge has weights, so we draw both with no labels.
+      \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] node[\firstWeightPosition] {$\firstEdgeWeight$}(\secondNode);
+      \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] node[\secondWeightPosition] {$\secondEdgeWeight$}(\firstNode);
+    \fi
+  }
+}
+
+\NewDocumentCommand{\edgeBuilder}{> { \SplitArgument { 4 } { , } } m}{
+  \executeEdgeBuilder #1
+}
+
+\NewDocumentCommand{\smartGraph}{> { \SplitList { ; } } m > { \SplitList { ; } } m }{
+  %
+  % #1 -> Vertices
+  % #2 -> Edges
+  %
+  \begin{tikzpicture}
+    \tikzset{
+      vertex/.style={circle,draw,minimum size=2em},
+      edge/.style={->,> = latex}
+    }
+
+    % vertices
+    \ProcessList {#1} {\nodeBuilder}
+
+    %edges
+    \ProcessList {#2} {\edgeBuilder}
+  \end{tikzpicture}
+}
+
+\endinput
+%%
+%% End of file `adigraph.sty'.

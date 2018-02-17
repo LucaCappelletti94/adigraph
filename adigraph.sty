@@ -181,9 +181,9 @@
   % #2 is second node
   % #3 is weight of first edge, which defaults to 0
   % #4 is weight of second edge, which defaults to 0
-  % #5 Label position on axis
-  % #6 Should we color edge? Or first optional color
-  % #7 Second optional color
+  % #5 Should we color edge? Or first optional color
+  % #6 Second optional color
+  % #7 Label position on axis
   %
   \edgeWasParsed{\isParsed}{#1}{#2}
   \FPifzero{\isParsed}
@@ -203,21 +203,21 @@
     }{
       \def\secondEdgeWeight{0}
     }
-    \IfValueTF{#5}{
-      \def\labelPosition{#5}
+    \IfValueTF{#7}{
+      \def\labelPosition{#7}
     }{
       \def\labelPosition{midway}
     }
-    \IfValueTF{#7}{
-      \IfValueTF{#6}{
-        \def\firstEdgeColor{#6}
-        \def\secondEdgeColor{#7}
+    \IfValueTF{#6}{
+      \IfValueTF{#5}{
+        \def\firstEdgeColor{#5}
+        \def\secondEdgeColor{#6}
       }{
         \def\firstEdgeColor{black}
         \def\secondEdgeColor{black}
       }
     }{
-      \IfValueTF{#6}{
+      \IfValueTF{#5}{
         \def\firstEdgeColor{red}
         \def\secondEdgeColor{blue}
       }{
@@ -272,7 +272,7 @@
       \draw[edge,\firstEdgeColor] (\firstNode) to node[\labelPosition, \secondWeightPosition] {$\firstEdgeWeight$}(\secondNode);
     \else
     \FPifzero{\firstZero}
-      \draw[edge,\firstEdgeColor] (\secondNode) to node[\labelPosition, \firstWeightPosition] {$\secondEdgeWeight$}(\firstNode);
+      \draw[edge,\secondEdgeColor] (\secondNode) to node[\labelPosition, \firstWeightPosition] {$\secondEdgeWeight$}(\firstNode);
     \FPifzero{\weightMul}
     \else
       \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] node[\labelPosition, \firstWeightPosition] {$\firstEdgeWeight$}(\secondNode);

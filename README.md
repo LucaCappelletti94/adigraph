@@ -4,13 +4,13 @@ A tex package to draw automatically tex graphs.
 This package requires the packages **fp**, **xparse**, **xstring** and **tikz** (in particular tikz/calc). If you don't have them you can proceed by installing them by running:
 
 ```sh
-    sudo tlmgr instal fp xparse xstring tikz
+sudo tlmgr instal fp xparse xstring tikz
 ```
 
 I'm currently looking into publishing this package on ctan, until then you'll have to download it and include in locally with the usual:
 
 ```latex
-    \usepackage{adigraph}
+\usepackage{adigraph}
 ```
 
 Then, suppose you want to create a graph as the following:

@@ -1,5 +1,5 @@
 # Smart Augmenting Graphs
-A tex package to draw automatically tex graphs.
+A tex package to draw **augmenting graphs** easealy and to draw **cuts** on them too.
 
 This package requires the packages **fp**, **xparse**, **xstring** and **tikz** (in particular tikz/calc). If you don't have them you can proceed by installing them by running:
 
@@ -125,7 +125,12 @@ Suppose now we want to show the steps for calculating the maximum flow of the gr
 
 The working example in latex is found in the file *adigraph_library_example.tex*.
 
+The result with the cuts is the following:
+
+![alt text][cuts]
+
 Have a nice day!
 **Luca Cappelletti**
 
-[graph]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_1.jpg?raw=true "Example_1"
+[graph]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_1.jpg?raw=true "Graph example"
+[cuts]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_2.jpg?raw=true "Example with cuts"

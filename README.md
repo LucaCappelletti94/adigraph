@@ -1,4 +1,4 @@
-# Smart Augmenting Graphs
+# Augmenting directed graphs
 
 Copyright 2018 Luca Cappelletti
 

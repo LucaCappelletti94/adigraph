@@ -11,6 +11,7 @@
 \RequirePackage{xparse}
 \RequirePackage{xstring}
 \RequirePackage{tikz}
+\usetikzlibrary{calc}
 
 \def\zero{0}
 
@@ -60,9 +61,9 @@
   }%
   \ifcsname parsed\nodeA\nodeB\endcsname
     \FPset{#1}{1}
-  \else
+  \else%
     \FPset{#1}{0}
-  \fi
+  \fi%
 }
 
 \newcommand{\saveNodeCoordinate}[3]{
@@ -118,33 +119,32 @@
   \FPsub{\xSub}{\secondX}{\firstX}
   \FPsub{\ySub}{\secondY}{\firstY}
   \FPset{#1}{1}
-  \FPifpos{\xSub}
+  \FPifgt{\xSub}{0}
     \FPset{#1}{3}
-  \else
+  \else%
     \FPset{#1}{4}
-  \fi
+  \fi%
   %
-  \FPifzero\xSub
+  \FPifeq{\xSub}{0}
     \FPset{\xiszero}{1}
-  \else
+  \else%
     \FPset{\xiszero}{0}
-  \fi
+  \fi%
   %
-  \FPifpos{\ySub}
+  \FPifgt{\ySub}{0}
     \FPset{\yispos}{1}
-  \else
+  \else%
     \FPset{\yispos}{4}
-  \fi
+  \fi%
   %
   \FPadd{\xzeroypos}{\xiszero}{\yispos}
-  \FPclip{\xzeroypos}{\xzeroypos}
   %
   \FPifeq{\xzeroypos}{2}
     \FPset{#1}{1}
-  \fi
+  \fi%
   \FPifeq{\xzeroypos}{5}
     \FPset{#1}{2}
-  \fi
+  \fi%
 }
 
 \newcommand{\executeNodeBuilder}[5]{
@@ -186,10 +186,10 @@
   % #7 Label position on axis
   %
   \edgeWasParsed{\isParsed}{#1}{#2}
-  \FPifzero{\isParsed}
+  \FPifeq{\isParsed}{0}
     \markEdgeAsParsed{#1}{#2}
     \markEdgeAsParsed{#2}{#1}
-  \fi
+  \fi%
   \IfValueT{#2}{
     \def\firstNode{#1}
     \def\secondNode{#2}
@@ -230,8 +230,6 @@
     \FPmul{\weightMul}{\firstEdgeWeight}{\secondEdgeWeight}
     \FPadd{\firstZero}{\weightMul}{\firstEdgeWeight}
     \FPadd{\secondZero}{\weightMul}{\secondEdgeWeight}
-    \FPclip{\weightSum}{\weightSum}
-    \FPclip{\weightMul}{\weightMul}
 
     \swp{\firstWeightPositionFlag}{#1}{#2}
     \swp{\secondWeightPositionFlag}{#2}{#1}
@@ -263,17 +261,17 @@
     \fi
     \FPifeq{\isParsed}{1}
     \else
-    \FPifzero{\weightSum}
+    \FPifeq{\weightSum}{0}
       % No edge has weights, so we draw both with no labels.
       \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] (\secondNode);
       \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] (\firstNode);
     \else
-    \FPifzero{\secondZero}
+    \FPifeq{\weightSum}{0}
       \draw[edge,\firstEdgeColor] (\firstNode) to node[\labelPosition, \secondWeightPosition] {$\firstEdgeWeight$}(\secondNode);
     \else
-    \FPifzero{\firstZero}
+    \FPifeq{\firstZero}{0}
       \draw[edge,\secondEdgeColor] (\secondNode) to node[\labelPosition, \firstWeightPosition] {$\secondEdgeWeight$}(\firstNode);
-    \FPifzero{\weightMul}
+    \FPifeq{\weightMul}{0}
     \else
       \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] node[\labelPosition, \firstWeightPosition] {$\firstEdgeWeight$}(\secondNode);
       \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] node[\labelPosition, \secondWeightPosition] {$\secondEdgeWeight$}(\firstNode);
@@ -285,11 +283,40 @@
   \executeEdgeBuilder #1
 }
 
-\NewDocumentCommand{\smartGraph}{> { \SplitList { ; } } m > { \SplitList { ; } } m > { \SplitList { ; } } m }{
+\NewDocumentCommand{\calculateOrientation}{m m m}{
+  \retrieveNodeCoordinate{\firstX}{#2}{X}
+  \retrieveNodeCoordinate{\firstY}{#2}{Y}
+  \retrieveNodeCoordinate{\secondX}{#3}{X}
+  \retrieveNodeCoordinate{\secondY}{#3}{Y}
+  \FPsub{\deltaY}{\secondY}{\firstY}
+  \FPsub{\deltaX}{\secondX}{\firstX}
+  \FPifeq{\deltaX}{0}
+    \Fpset{#1}{90}
+  \else
+    \FPdiv{\deltaDiv}{\deltaY}{\deltaX}
+    \FParctan{\arcResult}{\deltaDiv}
+    \FPmul{#1}{\arcResult}{57.2958}
+  \fi
+}
+
+\NewDocumentCommand{\executeCutBuilder}{m m}{
+  \IfValueT{#2}{
+    \calculateOrientation{\orientation}{#1}{#2}
+    \draw[dashed,red,rotate=\orientation] ([yshift=10pt]$(#1)!0.7!(#2)$) -- ([yshift=-10pt]$(#1)!0.7!(#2)$);
+    % %\node[vertex] (d) at (-3,-3) {$ARIAN$};
+  }
+}
+
+\NewDocumentCommand{\cutBuilder}{> { \SplitArgument { 1 } { , } } m}{
+  \executeCutBuilder #1
+}
+
+\NewDocumentCommand{\smartGraph}{> { \SplitList { ; } } m > { \SplitList { ; } } m > { \SplitList { ; } } m > { \SplitList { ; } } m}{
   %
   % #1 -> Vertices
   % #2 -> Edges
   % #3 -> Modified edges
+  % #4 -> Cuts
   %
   \begin{tikzpicture}
     \tikzset{
@@ -303,6 +330,9 @@
     %edges
     \ProcessList {#3} {\edgeBuilder}
     \ProcessList {#2} {\edgeBuilder}
+
+    %cuts
+    \ProcessList {#4} {\cutBuilder}
   \end{tikzpicture}
 }
 
@@ -312,11 +342,11 @@
   % #2 -> Nodes
   % #3 -> Edges
   %
-  \expandafter\newcommand\csname #1\endcsname[1]{
+  \expandafter\newcommand\csname #1\endcsname[2][]{
     %
     % ##1 -> Modified edges
     %
-    \smartGraph{#2}{#3}{##1}
+    \smartGraph{#2}{#3}{##2}{##1}
   }%
 }
 

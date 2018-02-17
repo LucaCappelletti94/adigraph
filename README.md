@@ -133,4 +133,4 @@ Have a nice day!
 **Luca Cappelletti**
 
 [graph]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_1.jpg?raw=true "Graph example"
-[cuts]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_2.jpg?raw=true "Example with cuts"
+[cuts]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_cut.jpg?raw=true "Example with cuts"

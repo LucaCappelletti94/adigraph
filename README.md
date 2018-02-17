@@ -3,7 +3,7 @@ A tex package to draw automatically tex graphs.
 
 This package requires the packages **fp**, **xparse**, **xstring** and **tikz** (in particular tikz/calc). If you don't have them you can proceed by installing them by running:
 
-```sh
+```bash
 sudo tlmgr instal fp xparse xstring tikz
 ```
 

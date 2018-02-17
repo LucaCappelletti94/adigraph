@@ -46,11 +46,11 @@ In the first argument we are defining the *nodes*, while in the second one we ar
 We now want to draw this graph. We proceed as follows:
 
 ```latex
-    \begin{figure}
-        \center
-        \myAdigraph{}
-        \caption{My Personal Graph}
-    \end{figure}
+\begin{figure}
+    \center
+    \myAdigraph{}
+    \caption{My Personal Graph}
+\end{figure}
 ```
 
 Suppose now we want to show the steps for calculating the maximum flow of the graph. We just add the edited edges inside the now empty argument of the *\myAdigraph*:

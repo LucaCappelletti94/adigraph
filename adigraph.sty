@@ -20,7 +20,50 @@
 \NewDocumentCommand{\storeCoordinate}{m m m}{
   \@namedef{adigraphNode#1#2}{#3}%
 }
+\NewDocumentCommand{\storeParsedEdge}{m m}{
+  \@namedef{parsed#1#2}{1}%
+}
 \makeatother
+\newcommand{\markEdgeAsParsed}[2]{%
+  %
+  % #1 -> First node of edge
+  % #2 -> Second node of edge
+  %
+  \IfInteger{#1}{%
+    \def\nodeA{\rom{#1}}%
+  }{%
+    \def\nodeA{#1}%
+  }%
+  \IfInteger{#2}{%
+    \def\nodeB{\rom{#2}}%
+  }{%
+    \def\nodeB{#2}%
+  }%
+  \storeParsedEdge{\nodeA}{\nodeB}
+}
+
+\newcommand{\edgeWasParsed}[3]{%
+  %
+  % #1 -> Variable to store boolean result
+  % #2 -> First node of edge
+  % #3 -> Second node of edge
+  %
+  \IfInteger{#2}{%
+    \def\nodeA{\rom{#2}}%
+  }{%
+    \def\nodeA{#2}%
+  }%
+  \IfInteger{#3}{%
+    \def\nodeB{\rom{#3}}%
+  }{%
+    \def\nodeB{#3}%
+  }%
+  \ifcsname parsed\nodeA\nodeB\endcsname
+    \FPset{#1}{1}
+  \else
+    \FPset{#1}{0}
+  \fi
+}
 
 \newcommand{\saveNodeCoordinate}[3]{
   %
@@ -104,12 +147,13 @@
   \fi
 }
 
-\newcommand{\executeNodeBuilder}[4]{
+\newcommand{\executeNodeBuilder}[5]{
   %
   % #1 is node name
   % #2 is x coordinate
   % #3 is y coordinate
   % #4 is label, that defaults to #1 when absent
+  % #5 is color, that defaults to black when absent
   %
   \IfValueT{#2}{
     \IfValueTF{#4}{
@@ -117,23 +161,35 @@
     }{
       \def\nodeLabel{#1}
     }
+    \IfValueTF{#5}{
+      \def\nodeColor{#5}
+    }{
+      \def\nodeColor{black}
+    }
     \saveNodeCoordinates{#1}{#2}{#3}
-    \node[vertex] (#1) at (#2,#3) {$\nodeLabel$};
+    \node[vertex,\nodeColor] (#1) at (#2,#3) {$\nodeLabel$};
   }
 }
 
-\NewDocumentCommand{\nodeBuilder}{ > { \SplitArgument { 3 } { , } } m }{
+\NewDocumentCommand{\nodeBuilder}{ > { \SplitArgument { 4 } { , } } m }{
   \executeNodeBuilder #1
 }
 
-\newcommand{\executeEdgeBuilder}[5]{
+\newcommand{\executeEdgeBuilder}[7]{
   %
   % #1 is first node
   % #2 is second node
   % #3 is weight of first edge, which defaults to 0
   % #4 is weight of second edge, which defaults to 0
-  % #5 Should we color edge?
+  % #5 Label position on axis
+  % #6 Should we color edge? Or first optional color
+  % #7 Second optional color
   %
+  \edgeWasParsed{\isParsed}{#1}{#2}
+  \FPifzero{\isParsed}
+    \markEdgeAsParsed{#1}{#2}
+    \markEdgeAsParsed{#2}{#1}
+  \fi
   \IfValueT{#2}{
     \def\firstNode{#1}
     \def\secondNode{#2}
@@ -148,11 +204,26 @@
       \def\secondEdgeWeight{0}
     }
     \IfValueTF{#5}{
-      \def\firstEdgeColor{red}
-      \def\secondEdgeColor{blue}
+      \def\labelPosition{#5}
     }{
-      \def\firstEdgeColor{black}
-      \def\secondEdgeColor{black}
+      \def\labelPosition{midway}
+    }
+    \IfValueTF{#7}{
+      \IfValueTF{#6}{
+        \def\firstEdgeColor{#6}
+        \def\secondEdgeColor{#7}
+      }{
+        \def\firstEdgeColor{black}
+        \def\secondEdgeColor{black}
+      }
+    }{
+      \IfValueTF{#6}{
+        \def\firstEdgeColor{red}
+        \def\secondEdgeColor{blue}
+      }{
+        \def\firstEdgeColor{black}
+        \def\secondEdgeColor{black}
+      }
     }
 
     \FPadd{\weightSum}{\firstEdgeWeight}{\secondEdgeWeight}
@@ -190,35 +261,35 @@
     \FPifeq{\secondWeightPositionFlag}{4}
       \def\secondWeightPosition{below}
     \fi
-
+    \FPifeq{\isParsed}{1}
+    \else
     \FPifzero{\weightSum}
       % No edge has weights, so we draw both with no labels.
       \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] (\secondNode);
       \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] (\firstNode);
     \else
     \FPifzero{\secondZero}
-      \draw[edge,\firstEdgeColor] (\firstNode) to node[\secondWeightPosition] {$\firstEdgeWeight$}(\secondNode);
+      \draw[edge,\firstEdgeColor] (\firstNode) to node[\labelPosition, \secondWeightPosition] {$\firstEdgeWeight$}(\secondNode);
     \else
     \FPifzero{\firstZero}
-      \draw[edge,\firstEdgeColor] (\secondNode) to node[\firstWeightPosition] {$\secondEdgeWeight$}(\firstNode);
-    \fi
+      \draw[edge,\firstEdgeColor] (\secondNode) to node[\labelPosition, \firstWeightPosition] {$\secondEdgeWeight$}(\firstNode);
     \FPifzero{\weightMul}
     \else
-      % No edge has weights, so we draw both with no labels.
-      \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] node[\firstWeightPosition] {$\firstEdgeWeight$}(\secondNode);
-      \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] node[\secondWeightPosition] {$\secondEdgeWeight$}(\firstNode);
+      \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] node[\labelPosition, \firstWeightPosition] {$\firstEdgeWeight$}(\secondNode);
+      \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] node[\labelPosition, \secondWeightPosition] {$\secondEdgeWeight$}(\firstNode);
     \fi
   }
 }
 
-\NewDocumentCommand{\edgeBuilder}{> { \SplitArgument { 4 } { , } } m}{
+\NewDocumentCommand{\edgeBuilder}{> { \SplitArgument { 6 } { , } } m}{
   \executeEdgeBuilder #1
 }
 
-\NewDocumentCommand{\smartGraph}{> { \SplitList { ; } } m > { \SplitList { ; } } m }{
+\NewDocumentCommand{\smartGraph}{> { \SplitList { ; } } m > { \SplitList { ; } } m > { \SplitList { ; } } m }{
   %
   % #1 -> Vertices
   % #2 -> Edges
+  % #3 -> Modified edges
   %
   \begin{tikzpicture}
     \tikzset{
@@ -230,8 +301,23 @@
     \ProcessList {#1} {\nodeBuilder}
 
     %edges
+    \ProcessList {#3} {\edgeBuilder}
     \ProcessList {#2} {\edgeBuilder}
   \end{tikzpicture}
+}
+
+\NewDocumentCommand{\NewAdigraph}{m m m}{
+  %
+  % #1 -> Variable to assign to as command
+  % #2 -> Nodes
+  % #3 -> Edges
+  %
+  \expandafter\newcommand\csname #1\endcsname[1]{
+    %
+    % ##1 -> Modified edges
+    %
+    \smartGraph{#2}{#3}{##1}
+  }%
 }
 
 \endinput

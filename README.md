@@ -1,5 +1,5 @@
 # Smart Augmenting Graphs
-A tex package to draw **augmenting graphs** easealy and to draw **cuts** on them too.
+A tex package to draw **augmenting graphs** easily and to draw **cuts** on them too.
 
 This package requires the packages **fp**, **xparse**, **xstring** and **tikz** (in particular tikz/calc). If you don't have them you can proceed by installing them by running:
 

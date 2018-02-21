@@ -18,7 +18,7 @@
 \usetikzlibrary{calc}
 
 \makeatletter
-\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\newcommand*{\adigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 
 \NewDocumentCommand{\storeCoordinate}{m m m}{
   \@namedef{adigraphNode#1#2}{#3}%
@@ -33,12 +33,12 @@
   % #2 -> Second node of edge
   %
   \IfInteger{#1}{%
-    \def\nodeA{\rom{#1}}%
+    \def\nodeA{\adigraphRom{#1}}%
   }{%
     \def\nodeA{#1}%
   }%
   \IfInteger{#2}{%
-    \def\nodeB{\rom{#2}}%
+    \def\nodeB{\adigraphRom{#2}}%
   }{%
     \def\nodeB{#2}%
   }%
@@ -52,12 +52,12 @@
   % #3 -> Second node of edge
   %
   \IfInteger{#2}{%
-    \def\nodeA{\rom{#2}}%
+    \def\nodeA{\adigraphRom{#2}}%
   }{%
     \def\nodeA{#2}%
   }%
   \IfInteger{#3}{%
-    \def\nodeB{\rom{#3}}%
+    \def\nodeB{\adigraphRom{#3}}%
   }{%
     \def\nodeB{#3}%
   }%
@@ -75,7 +75,7 @@
   % #3 -> Numeric value
   %
   \IfInteger{#1}{%
-    \def\nodeName{\rom{#1}}%
+    \def\nodeName{\adigraphRom{#1}}%
   }{%
     \def\nodeName{#1}%
   }%
@@ -89,7 +89,7 @@
   % #3 -> Coordinate, either X or Y
   %
   \IfInteger{#2}{%
-    \def\nodeName{\rom{#2}}%
+    \def\nodeName{\adigraphRom{#2}}%
   }{%
     \def\nodeName{#2}%
   }%

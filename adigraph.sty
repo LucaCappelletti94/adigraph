@@ -45,6 +45,14 @@
   \storeParsedEdge{\nodeA}{\nodeB}
 }
 
+\NewDocumentCommand{\adigraphIsZero}{m m m}{
+  \ifnum0=#1%
+  #2%
+  \else%
+  #3%
+  \fi%
+}
+
 \newcommand{\edgeWasParsed}[3]{%
   %
   % #1 -> Variable to store boolean result
@@ -188,10 +196,10 @@
   % #7 Label position on axis
   %
   \edgeWasParsed{\isParsed}{#1}{#2}
-  \FPifeq{\isParsed}{0}
+  \adigraphIsZero{\isParsed}{
     \markEdgeAsParsed{#1}{#2}
     \markEdgeAsParsed{#2}{#1}
-  \fi%
+  }{}
   \IfValueT{#2}{
     \def\firstNode{#1}
     \def\secondNode{#2}
@@ -292,13 +300,13 @@
   \retrieveNodeCoordinate{\secondY}{#3}{Y}
   \FPsub{\deltaY}{\secondY}{\firstY}
   \FPsub{\deltaX}{\secondX}{\firstX}
-  \FPifeq{\deltaX}{0}
-    \Fpset{#1}{90}
-  \else
+  \adigraphIsZero{\deltaX}{
+    \FPset{#1}{90}
+  }{
     \FPdiv{\deltaDiv}{\deltaY}{\deltaX}
     \FParctan{\arcResult}{\deltaDiv}
     \FPmul{#1}{\arcResult}{57.2958}
-  \fi
+  }
 }
 
 \NewDocumentCommand{\executeCutBuilder}{m m}{
@@ -328,6 +336,7 @@
 
     % vertices
     \ProcessList {#1} {\nodeBuilder}
+
 
     %edges
     \ProcessList {#3} {\edgeBuilder}

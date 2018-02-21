@@ -268,7 +268,7 @@
       \draw[edge,\firstEdgeColor] (\firstNode) to [bend right=20] (\secondNode);
       \draw[edge,\secondEdgeColor] (\secondNode) to [bend right=20] (\firstNode);
     \else
-    \FPifeq{\weightSum}{0}
+    \FPifeq{\secondZero}{0}
       \draw[edge,\firstEdgeColor] (\firstNode) to node[\labelPosition, \secondWeightPosition] {$\firstEdgeWeight$}(\secondNode);
     \else
     \FPifeq{\firstZero}{0}

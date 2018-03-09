@@ -9,17 +9,17 @@
 %
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
-[2018/02/16 v1.1 LaTeX package for creating augmenting directed graphs]
+[2018/03/09 v1.2 LaTeX package for creating augmenting directed graphs]
 
 \RequirePackage{etoolbox}
-\RequirePackage{xstring}
 \RequirePackage{fp}
 \RequirePackage{xparse}
+\RequirePackage{xstring}
 \RequirePackage{tikz}
 \usetikzlibrary{calc}
 
 \makeatletter
-\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\newcommand*{\AdigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
 
 \newcounter{AdigraphNumberOfPaths}
@@ -108,8 +108,8 @@
 		%Do nothing, this is the tail of the list
 	}{%
 		\IfInteger{#1}{%
-			\def\AdigraphNodeName{\rom{#1}}%
-			\listgadd{\AdigraphNodeList}{\rom{#1}}
+			\def\AdigraphNodeName{\AdigraphRom{#1}}%
+			\listgadd{\AdigraphNodeList}{\AdigraphRom{#1}}
 		}{%
 			\def\AdigraphNodeName{#1}%
 			\listgadd{\AdigraphNodeList}{#1}
@@ -136,16 +136,16 @@
 	\RenewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black}}{%
 		\IfInteger{##1}{%
 			\IfInteger{##2}{%
-				\def\AdigraphEdgeName{\rom{##1}v\rom{##2}}%
-				\listgadd{\AdigraphEdgeList}{\rom{##1},\rom{##2}}
+				\def\AdigraphEdgeName{\AdigraphRom{##1}v\AdigraphRom{##2}}%
+				\listgadd{\AdigraphEdgeList}{\AdigraphRom{##1},\AdigraphRom{##2}}
 			}{%
-				\def\AdigraphEdgeName{\rom{##1}v##2}%
-				\listgadd{\AdigraphEdgeList}{\rom{##1},##2}
+				\def\AdigraphEdgeName{\AdigraphRom{##1}v##2}%
+				\listgadd{\AdigraphEdgeList}{\AdigraphRom{##1},##2}
 			}%
 		}{%
 			\IfInteger{##2}{%
-				\def\AdigraphEdgeName{##1v\rom{##2}}%
-				\listgadd{\AdigraphEdgeList}{##1,\rom{##2}}
+				\def\AdigraphEdgeName{##1v\AdigraphRom{##2}}%
+				\listgadd{\AdigraphEdgeList}{##1,\AdigraphRom{##2}}
 			}{%
 				\def\AdigraphEdgeName{##1v##2}%
 				\listgadd{\AdigraphEdgeList}{##1,##2}
@@ -187,16 +187,16 @@
 
 \NewDocumentCommand{\AdigraphElaboratePath}{m m G{black}}{}
 
-\newcount\mycount
+\newcount\AdigraphCounter
 \NewDocumentCommand{\AdigraphSimpleSum}{m m m}{%
 	%
 	% #1 -> First addendum
 	% #2 -> Second addendum
 	% #3 -> Variable to store sum
 	%
-	\mycount #1\relax
-	\advance\mycount +#2\relax
-	\FPset{#3}{\the\mycount}
+	\AdigraphCounter #1\relax
+	\advance\AdigraphCounter +#2\relax
+	\FPset{#3}{\the\AdigraphCounter}
 }
 
 \NewDocumentCommand{\AdigraphPathBuilder}{m m m}{%
@@ -254,7 +254,7 @@
 	%
 	\RenewDocumentCommand{\AdigraphElaboratePath}{m}{%
 		\IfInteger{##1}{%
-			\def\AdigraphCurrentNode{\rom{##1}}%
+			\def\AdigraphCurrentNode{\AdigraphRom{##1}}%
 		}{%
 			\def\AdigraphCurrentNode{##1}%
 		}%
@@ -264,7 +264,7 @@
 			% This is the first iteration
 		}
 		\IfInteger{##1}{%
-			\def\AdigraphLastParsedNode{\rom{##1}}%
+			\def\AdigraphLastParsedNode{\AdigraphRom{##1}}%
 		}{%
 			\def\AdigraphLastParsedNode{##1}%
 		}%
@@ -325,12 +325,12 @@
 % Reached end of list
 }{%
 \IfInteger{#1}{%
-	\def\AdigraphFirstNode{\rom{#1}}%
+	\def\AdigraphFirstNode{\AdigraphRom{#1}}%
 }{%
 	\def\AdigraphFirstNode{#1}%
 }%
 \IfInteger{#2}{%
-	\def\AdigraphSecondNode{\rom{#2}}%
+	\def\AdigraphSecondNode{\AdigraphRom{#2}}%
 }{%
 	\def\AdigraphSecondNode{#2}%
 }%
@@ -357,7 +357,7 @@
 	%
 	\def\AdigraphNodeList{}
 	\def\AdigraphEdgeList{}
-	\letcs{\augmentingPaths}{#3}
+	\letcs{\AdigraphAugmentingPaths}{#3}
 	\begin{tikzpicture}
 		\tikzset{%
 			vertex/.style={circle,draw,minimum size=2em},
@@ -377,15 +377,15 @@
 			\AdigraphProcessEdges{#2}
 		}
 
-		\ifblank{\augmentingPaths}{%
+		\ifblank{\AdigraphAugmentingPaths}{%
 			% List is empty
 		}{%
 			\ifblank{#5}{%
 				\defcounter{AdigraphNumberOfPaths}{100000}
 			}{%
 			}
-			\forlistloop{\AdigraphCountPaths}{\augmentingPaths}
-			\forlistloop{\AdigraphProcessPaths}{\augmentingPaths}
+			\forlistloop{\AdigraphCountPaths}{\AdigraphAugmentingPaths}
+			\forlistloop{\AdigraphProcessPaths}{\AdigraphAugmentingPaths}
 		}
 
 		\ifblank{#2}{%
@@ -410,17 +410,17 @@
 	% #3 -> Edges
 	%
 	\csdef{Adigraph#1AugmentingPaths}{}%
-	\expandafter\NewDocumentCommand{\processAugmentingPaths}{m}{%
+	\expandafter\NewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{%
 		\listcsgadd{Adigraph#1AugmentingPaths}{##1}
 	}
-	\expandafter\NewDocumentCommand{\processAugmentingPathsList}{> { \SplitList{;} } m}{%
-		\processAugmentingPaths##1
+	\expandafter\NewDocumentCommand{\AdigraphProcessAugmentingPathsList}{> { \SplitList{;} } m}{%
+		\AdigraphProcessAugmentingPaths##1
 	}
 	\expandafter\NewDocumentCommand\expandafter{\csname #1\endcsname}{m G{}}{%
 		%
 		% ##1 -> Augmenting path
 		%
-		\processAugmentingPathsList{##1}
+		\AdigraphProcessAugmentingPathsList{##1}
 		\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}
 	}%
 }

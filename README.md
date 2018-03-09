@@ -30,9 +30,8 @@ More examples and step by step explanation is available in the [documentation](h
 Suppose you want to create a graph as the following, with an augmenting path highlighted and a couple of cuts:
 
 <p align="center">
-  ![alt text][graph2]
+  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true" width="600px">
 </p>
-
 
 We start by defining a new graph, called *myAdigraph*:
 
@@ -65,9 +64,8 @@ At this point the output is the following:
 ```
 
 <p align="center">
-  ![alt text][graph0]
+  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_0.jpg?raw=true" width="600px">
 </p>
-
 Then we can add the augmenting path as follows:
 
 ```latex
@@ -77,9 +75,8 @@ Then we can add the augmenting path as follows:
 ```
 
 <p align="center">
-  ![alt text][graph1]
+  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_1.jpg?raw=true" width="600px">
 </p>
-
 
 And the cuts (remember that the paths from previous steps are memorized by the library) are added as follows:
 
@@ -93,9 +90,8 @@ And the cuts (remember that the paths from previous steps are memorized by the l
 The result with the cuts is the following:
 
 <p align="center">
-  ![alt text][graph2]
+  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_2.jpg?raw=true" width="600px">
 </p>
-
 
 You can add both cuts and paths at the same time to keep the latest path highlighted:
 
@@ -109,15 +105,9 @@ You can add both cuts and paths at the same time to keep the latest path highlig
 ```
 
 <p align="center">
-  ![alt text][graph3]
+  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true" width="600px">
 </p>
-
 
 Have a nice day!
 
 **Luca Cappelletti**
-
-[graph0]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_0.jpg?raw=true "Graph example, basic"
-[graph1]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_1.jpg?raw=true "Graph example, with augmenting path"
-[graph2]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_2.jpg?raw=true "Graph example, with cuts"
-[graph3]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true "Graph example, with path highlighted"

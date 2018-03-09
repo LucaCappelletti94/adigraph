@@ -6,6 +6,7 @@
 
 \usepackage{adigraph}
 \usepackage{xcolor}
+\usepackage[colorlinks=true,urlcolor=blue,pdfpagelabels,hyperindex=false]{hyperref}
 \usepackage{minted}
 \usepackage{multicol}
 \usepackage{graphicx} % for images and generally graphics
@@ -54,20 +55,36 @@
 
 \maketitle
 
+{\hypersetup{hidelinks}
+	\tableofcontents  % Generates the table of contents
+}
+
 \chapter{Introduction}
-\textbf{Adigraph} is a latex library for drawing directed graphs and augmenting directed graphs, and to draw cuts over them.
+\section{What is Adigraph?}
+\textbf{\href{https://ctan.org/pkg/adigraph}{Adigraph}} is a latex library for drawing directed graphs and augmenting directed graphs, and to draw cuts over them.
 
 It handles automatically the positioning of labels, with the exception of the horizontal position, and the inclinations of cuts.
 
-\section{Setup}
-\subsection{Installing the dependencies}
+The latest version is available on \href{https://github.com/LucaCappelletti94/adigraph}{Github}.
+
+\section{License}
+Copyright 2018 Luca Cappelletti
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sub-license, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\\
+
+\chapter{Setup}
+\section{Installing the dependencies}
 Clearly you need to have texlive installed. Then, make sure you have the following packages:
 
 \begin{description}
-	\item[fp] Used for floating point calculations.
-	\item[xparse] Used for elaborating parameters.
-	\item[xstring] Used for operations on strings.
-	\item[etoolbox] Used for operations on lists.
+	\item[\href{https://ctan.org/pkg/fp}{fp}] Used for floating point calculations.
+	\item[\href{https://ctan.org/pkg/xparse}{xparse}] Used for elaborating parameters.
+	\item[\href{https://ctan.org/pkg/xstring}{xstring}] Used for elaborating strings.
+	\item[\href{https://ctan.org/pkg/etoolbox}{etoolbox}] Used for operations on lists.
 	\item[tikz] Used for drawing the actual graphs.
 	\item[tikz calc library] Used for some internal calculations in tikz.
 \end{description}
@@ -75,10 +92,10 @@ Clearly you need to have texlive installed. Then, make sure you have the followi
 To be sure you can run the following, that will install the packages only if they are not already present:
 
 \begin{minted}{sh}
-sudo tlmgr install etoolbox xstring fp xparse tikz
+sudo tlmgr install etoolbox fp xstring
 \end{minted}
 
-\subsection{Installing Adigraph}
+\section{Installing Adigraph}
 You can install Adigraph, if it isn't already present in your setup, by running the following on Unix systems:
 
 \begin{minted}{sh}
@@ -467,6 +484,7 @@ An augmenting path is specified by the following syntax: \textit{<comma separate
 	3,4:25;
 	1,2:35;
 	2,t:20;
+	4,t:30;
 	3,1:10;
 	4,2:10;
 	2,3:15::near start;
@@ -609,11 +627,13 @@ I reserve to use for the package the following tokens:
 \begin{multicols}{2}
 	\begin{enumerate}
 		\item Adigraph
+		\item AdigraphAugmentingPaths
 		\item AdigraphBuildEdge
 		\item AdigraphBuildEdgeWrapper
 		\item AdigraphBuildNode
 		\item AdigraphBuildPath
 		\item AdigraphCalculateOrientation
+		\item AdigraphCounter
 		\item AdigraphCountPaths
 		\item AdigraphCurrentPathNumber
 		\item AdigraphCutBuilder
@@ -621,6 +641,7 @@ I reserve to use for the package the following tokens:
 		\item AdigraphDrawNode
 		\item AdigraphEdgeBuilder
 		\item AdigraphEdgeDrawer
+		\item AdigraphEdgeList
 		\item AdigraphEdgeName
 		\item AdigraphElaboratePath
 		\item AdigraphElaboratePath
@@ -629,13 +650,16 @@ I reserve to use for the package the following tokens:
 		\item AdigraphMemorizeEdge
 		\item AdigraphMemorizeNode
 		\item AdigraphNodeBuilder
+		\item AdigraphNodeList
 		\item AdigraphNodeName
 		\item AdigraphNumberOfPaths
 		\item AdigraphPathBuilder
+		\item AdigraphProcessAugmentingPaths
 		\item AdigraphProcessCuts
 		\item AdigraphProcessEdges
 		\item AdigraphProcessNodes
 		\item AdigraphProcessPaths
+		\item AdigraphRom
 		\item AdigraphSecondNode
 		\item AdigraphSimpleSum
 		\item AdigraphTwinEdgeWeight

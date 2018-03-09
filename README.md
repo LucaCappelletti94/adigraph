@@ -1,145 +1,123 @@
-# Augmenting directed graphs
+# Adigraph
+[Adigraph](https://ctan.org/pkg/adigraph) is a pure latex library for drawing directed graphs and augmenting directed graphs, and to draw cuts over them. It DOES NOT require external libraries such as Graphviz or DOT. 
 
-Copyright 2018 Luca Cappelletti
+It handles automatically the positioning of labels, with the exception of the horizontal position, and the inclinations of cuts.
 
-A tex package to draw **augmenting graphs** easily and to draw **cuts** on them too.
+**This library is released under MIT license (Copyright 2018 Luca Cappelletti)**.
 
-This package requires the packages **fp**, **xparse**, **xstring** and **tikz** (in particular tikz/calc). If you don't have them you can proceed by installing them by running:
+##Documentation
+For more information, you can read the documentation available [here](https://github.com/LucaCappelletti94/adigraph/blob/master/documentation.pdf)
 
+##Basic setup
+### Installing the package
+If you are on Linux or macOs you can run the following.
 ```bash
-sudo tlmgr install fp xparse xstring tikz
+sudo tlmgr install fp etoolbox adigraph
 ```
 
-You can install this package with the following command:
+Otherwise install the packages with the package manager of your choice.
 
-```bash
-sudo tlmgr install adigraph
-```
-
-Or download it from either here or the [ctan website](https://ctan.org/pkg/adigraph).
+### Requiring the package in the document
+Remember to require the package in the document.
 
 ```latex
 \usepackage{adigraph}
 ```
 
-Then, suppose you want to create a graph as the following:
+##Basic example
+More examples and step by step explanation is available in the [documentation](https://github.com/LucaCappelletti94/adigraph/blob/master/documentation.pdf).
 
-![alt text][graph]
+Suppose you want to create a graph as the following, with an augmenting path highlighted and a couple of cuts:
 
-We start by defining a new graph:
+<p align="center">
+  ![alt text][graph2]
+</p>
 
-```latex
-    \NewAdigraph{myAdigraph}{
-        s,0,0,b,red;
-        1,2,2;
-        3,2,-2;
-        2,6,2;
-        4,6,-2;
-        t,8,0,e,blue;
-    }{
-        s,3,25;
-        s,1,25;
-        3,1,5;
-        3,4,20;
-        4,2,5;
-        2,3,15,0,near start;
-        4,1,5,0,near start;
-        1,2,35;
-        2,t,20;
-        4,t,30;
-    }
-```
 
-In the first argument we are defining the *nodes*, while in the second one we are defining the *edges*. The name of this particular graph will be *myAdigraph*.
-
-We now want to draw this graph. We proceed as follows:
+We start by defining a new graph, called *myAdigraph*:
 
 ```latex
-\begin{figure}
-    \center
-    \myAdigraph{}
-    \caption{My Personal Graph}
-\end{figure}
+\NewAdigraph{myAdigraph}{
+    s:0,0;
+    1:2,2;
+    3:2,-2;
+    2:6,2;
+    4:6,-2;
+    t:8,0;
+}{
+    s,1:25;
+    s,3:25;
+    3,4:25;
+    1,2:35;
+    2,t:20;
+    4,t:30;
+    3,1:10;
+    4,2:10;
+    2,3:15::near start;
+    4,1:5::near start;
+}
 ```
 
-Suppose now we want to show the steps for calculating the maximum flow of the graph. We just add the edited edges inside the now empty argument of the *\myAdigraph*:
+At this point the output is the following:
 
 ```latex
-\begin{figure}
-    \center
-    \myAdigraph{
-        s,3,5,20,1;
-        3,4,0,20,1;
-        4,t,20,10,1;
-    }
-    \caption{Sending 10 units over $s,3,4,t$}
-\end{figure}
-
-\begin{figure}
-    \center
-    \myAdigraph{
-        s,3,5,20;
-        3,4,0,20;
-        s,1,20,5,1;
-        4,1,5,0,red,blue,near start;
-        4,t,15,15,1;
-    }
-    \caption{Sending 5 units over $s,1,4,t$}
-\end{figure}
-
-\begin{figure}
-    \center
-    \myAdigraph{
-        s,3,5,20;
-        3,4,0,20;
-        s,1,15,10,1;
-        1,2,25,10,1;
-        4,2,5,0,1;
-        4,t,10,20,1;
-    }
-    \caption{Sending 5 units over $s,1,2,4,t$}
-\end{figure}
-
-\begin{figure}
-    \center
-    \myAdigraph{
-        s,3,5,20;
-        3,4,0,20;
-        s,1,5,20,1;
-        1,2,15,20,1;
-        4,2,5,0;
-        2,t,0,20,1;
-        4,t,10,20;
-    }
-    \caption{Sending 10 units over $s,1,2,t$}
-\end{figure}
-
-\begin{figure}
-    \center
-    \myAdigraph[
-        3,4;
-        2,t;
-    ]{
-        s,3,5,20;
-        3,4,0,20;
-        s,1,5,20,1;
-        1,2,15,20,1;
-        4,2,5,0;
-        2,t,0,20,1;
-        4,t,10,20;
-    }
-    \caption{Showing minimum cut}
-\end{figure}
+\myAdigraph{}
 ```
 
-The working example in latex is found in the file *adigraph_library_example.tex*.
+<p align="center">
+  ![alt text][graph0]
+</p>
+
+Then we can add the augmenting path as follows:
+
+```latex
+\myAdigraph{
+    s,3,4,2,t:5;
+}
+```
+
+<p align="center">
+  ![alt text][graph1]
+</p>
+
+
+And the cuts (remember that the paths from previous steps are memorized by the library) are added as follows:
+
+```latex
+\myAdigraph{}{
+    2,t,red;
+    3,4,blue;
+}
+```
 
 The result with the cuts is the following:
 
-![alt text][cuts]
+<p align="center">
+  ![alt text][graph2]
+</p>
+
+
+You can add both cuts and paths at the same time to keep the latest path highlighted:
+
+```latex
+\myAdigraph{
+    s,3,4,2,t:5;
+}{
+    2,t,red;
+    3,4,blue;
+}
+```
+
+<p align="center">
+  ![alt text][graph3]
+</p>
+
 
 Have a nice day!
+
 **Luca Cappelletti**
 
-[graph]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_1.jpg?raw=true "Graph example"
-[cuts]: https://github.com/LucaCappelletti94/smart_augmenting_graphs/blob/master/img_examples/example_cut.jpg?raw=true "Example with cuts"
+[graph0]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_0.jpg?raw=true "Graph example, basic"
+[graph1]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_1.jpg?raw=true "Graph example, with augmenting path"
+[graph2]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_2.jpg?raw=true "Graph example, with cuts"
+[graph3]: https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true "Graph example, with path highlighted"

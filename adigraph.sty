@@ -9,7 +9,7 @@
 %
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
-[2018/03/09 v1.2 LaTeX package for creating augmenting directed graphs]
+[2018/03/10 v1.3 LaTeX package for creating augmenting directed graphs]
 
 \RequirePackage{etoolbox}
 \RequirePackage{fp}
@@ -22,11 +22,10 @@
 \newcommand*{\AdigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
 
+\newcounter{AdigraphTotalNodeCounter}
+\newcounter{AdigraphCurrentNodeCounter}
 \newcounter{AdigraphNumberOfPaths}
-\setcounter{AdigraphNumberOfPaths}{0}
-
 \newcounter{AdigraphCurrentPathNumber}
-\setcounter{AdigraphCurrentPathNumber}{0}
 
 \NewDocumentCommand{\AdigraphDrawNode}{m}{%
 	%
@@ -53,11 +52,32 @@
 		\letcs{\secondX}{adigraphNode#2X}
 		\letcs{\secondY}{adigraphNode#2Y}
 
-		\ifnumgreater{\secondX-\firstX}{0}{%
+		\providebool{equalX}
+		\FPifeq{\firstX}{\secondX}
+		\booltrue{equalX}
+		\else
+		\boolfalse{equalX}
+		\fi
+
+		\providebool{ltX}
+		\FPiflt{\firstX}{\secondX}
+		\booltrue{ltX}
+		\else
+		\boolfalse{ltX}
+		\fi
+
+		\providebool{ltY}
+		\FPiflt{\firstY}{\secondY}
+		\booltrue{ltY}
+		\else
+		\boolfalse{ltY}
+		\fi
+
+		\ifbool{ltX}{%
 			\def\AdigraphLabelPosition{above}
 		}{%
-			\ifnumequal{\secondX-\firstX}{0}{%
-				\ifnumgreater{\secondY-\firstY}{0}{%
+			\ifbool{equalX}{%
+				\ifbool{ltY}{%
 					\def\AdigraphLabelPosition{left}
 				}{%
 					\def\AdigraphLabelPosition{right}
@@ -96,32 +116,56 @@
 	}
 }
 
+\NewDocumentCommand{\AdigraphGenerateNodeName}{m m G{black}}{}
 \NewDocumentCommand{\AdigraphMemorizeNode}{m m G{black}}{}
 
-\NewDocumentCommand{\AdigraphBuildNode}{m > { \SplitArgument{ 2 } {,} } m G{#1}}{%
+\NewDocumentCommand{\AdigraphBuildNode}{> { \SplitArgument{ 1 } {,} } m > { \SplitArgument{ 1 } {,} } m m}{%
 	%
 	% #1 -> given node name, not normalized
 	% #2 -> list of coordinates and color
 	% #3 -> optional label
 	%
-	\ifblank{#1}{%
-		%Do nothing, this is the tail of the list
-	}{%
-		\IfInteger{#1}{%
-			\def\AdigraphNodeName{\AdigraphRom{#1}}%
-			\listgadd{\AdigraphNodeList}{\AdigraphRom{#1}}
+	\RenewDocumentCommand{\AdigraphGenerateNodeName}{m G{black}}{%
+		\IfInteger{##1}{%
+			\def\AdigraphNodeName{\AdigraphRom{##1}}%
+			\listgadd{\AdigraphNodeList}{\AdigraphRom{##1}}
 		}{%
-			\def\AdigraphNodeName{#1}%
-			\listgadd{\AdigraphNodeList}{#1}
+			\def\AdigraphNodeName{##1}%
+			\listgadd{\AdigraphNodeList}{##1}
 		}%
-		\RenewDocumentCommand{\AdigraphMemorizeNode}{m m G{black}}{%
+		\csdef{adigraphNode\AdigraphNodeName Color}{##2}%
+		\ifblank{#3}{
+			\csdef{adigraphNode\AdigraphNodeName Label}{##1}%
+		}{
 			\csdef{adigraphNode\AdigraphNodeName Label}{#3}%
+		}
+	}
+	\RenewDocumentCommand{\AdigraphMemorizeNode}{m G{}}{%
+		\ifblank{##2}{
+			\newcount\radius
+			\newcount\myi
+			\newcount\myn
+			\newcount\mydpi
+			\radius ##1\relax
+			\myi \value{AdigraphCurrentNodeCounter}\relax
+			\myn \value{AdigraphTotalNodeCounter}\relax
+			\FPset{\mydpi}{6.283185307179586476}
+			\FPmul{\numerator}{\the\myi}{\mydpi}
+			\FPdiv{\anomaly}{\numerator}{\the\myn}
+			\FPcos{\nodeX}{\anomaly}
+			\FPsin{\nodeY}{\anomaly}
+			\FPmul{\nodeX}{\nodeX}{\the\radius}
+			\FPmul{\nodeY}{\nodeY}{\the\radius}
+			\csedef{adigraphNode\AdigraphNodeName X}{\nodeX}%
+			\csedef{adigraphNode\AdigraphNodeName Y}{\nodeY}%
+			\stepcounter{AdigraphCurrentNodeCounter}
+		}{
 			\csdef{adigraphNode\AdigraphNodeName X}{##1}%
 			\csdef{adigraphNode\AdigraphNodeName Y}{##2}%
-			\csdef{adigraphNode\AdigraphNodeName Color}{##3}%
-		}%
-		\AdigraphMemorizeNode#2
-	}
+		}
+	}%
+	\AdigraphGenerateNodeName#1
+	\AdigraphMemorizeNode#2
 }
 
 \NewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black}}{}
@@ -187,15 +231,15 @@
 
 \NewDocumentCommand{\AdigraphElaboratePath}{m m G{black}}{}
 
-\newcount\AdigraphCounter
 \NewDocumentCommand{\AdigraphSimpleSum}{m m m}{%
 	%
 	% #1 -> First addendum
 	% #2 -> Second addendum
 	% #3 -> Variable to store sum
 	%
+	\newcount\AdigraphCounter
 	\AdigraphCounter #1\relax
-	\advance\AdigraphCounter +#2\relax
+	\advance\AdigraphCounter #2\relax
 	\FPset{#3}{\the\AdigraphCounter}
 }
 
@@ -273,8 +317,16 @@
 	\undef{\AdigraphLastParsedNode}
 }
 
+\NewDocumentCommand{\AdigraphBuildNodeWrapper}{m m G{}}{
+	\ifblank{#1}{
+		%end of list
+	}{
+		\AdigraphBuildNode{#1}{#2}{#3}
+	}
+}
+
 \NewDocumentCommand{\AdigraphNodeBuilder}{ > { \SplitArgument{ 2 } {:} } m }{%
-	\AdigraphBuildNode#1
+	\AdigraphBuildNodeWrapper#1
 }
 
 \NewDocumentCommand{\AdigraphEdgeBuilder}{ > { \SplitArgument{ 3 } {:} } m }{%
@@ -283,6 +335,26 @@
 
 \NewDocumentCommand{\AdigraphEdgeDrawer}{ > { \SplitArgument{ 1 } {,} } m }{%
 	\AdigraphDrawEdge#1
+}
+
+\NewDocumentCommand{\AdigraphNodeCounter}{m G{}}{%
+	\ifblank{#2}{
+		\stepcounter{AdigraphTotalNodeCounter}
+	}{}
+}
+
+\NewDocumentCommand{\AdigraphNodeCounterWrapper}{m > { \SplitArgument{ 1 } {,} } m m m }{%
+	\ifblank{#1}{}{
+		\AdigraphNodeCounter#2
+	}
+}
+
+\NewDocumentCommand{\AdigraphNodeCounterSecondWrapper}{ > { \SplitArgument{ 3 } {:} } m }{%
+	\AdigraphNodeCounterWrapper#1
+}
+
+\NewDocumentCommand{\AdigraphNodesCounter}{> { \SplitList{;} } m}{%
+	\ProcessList{#1}{\AdigraphNodeCounterSecondWrapper}
 }
 
 \NewDocumentCommand{\AdigraphProcessNodes}{> { \SplitList{;} } m}{%
@@ -308,6 +380,13 @@
 	\letcs{\firstY}{adigraphNode#2Y}
 	\letcs{\secondX}{adigraphNode#3X}
 	\letcs{\secondY}{adigraphNode#3Y}
+
+	\providebool{equalX}
+	\FPifeq{\firstX}{\secondX}
+	\booltrue{equalX}
+	\else
+	\boolfalse{equalX}
+	\fi
 
 	\ifnumequal{\secondX-\firstX}{0}{%
 		\FPset{#1}{90}
@@ -368,6 +447,7 @@
 		\ifblank{#1}{%
 			% List is empty
 		}{%
+			\AdigraphNodesCounter{#1}
 			\AdigraphProcessNodes{#1}
 		}
 
@@ -394,14 +474,17 @@
 			\forlistloop{\AdigraphEdgeDrawer}{\AdigraphEdgeList}
 		}
 
-		%cuts
-		\ifblank{#4}{%
-			% List is empty
-		}{%
-			\AdigraphProcessCuts{#4}
-		}
+		% %cuts
+		% \ifblank{#4}{%
+		% 	% List is empty
+		% }{%
+		% 	\AdigraphProcessCuts{#4}
+		% }
 	\end{tikzpicture}
 }
+
+\NewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{}
+\NewDocumentCommand{\AdigraphProcessAugmentingPathsList}{m}{}
 
 \NewDocumentCommand{\NewAdigraph}{m m G{}}{%
 	%
@@ -409,21 +492,68 @@
 	% #2 -> Nodes
 	% #3 -> Edges
 	%
-	\csdef{Adigraph#1AugmentingPaths}{}%
-	\expandafter\NewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{%
-		\listcsgadd{Adigraph#1AugmentingPaths}{##1}
+	\ifcsdef{#1}{
+		\PackageError{adigraph}{%
+			You have already define an adigraph called #1.
+		}{%
+			Identify the duplicate and change its name, e.g. Second#1
+		}
+	}{
+		\csdef{Adigraph#1AugmentingPaths}{}%
+		\expandafter\RenewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{%
+			\listcsgadd{Adigraph#1AugmentingPaths}{##1}
+		}
+		\expandafter\RenewDocumentCommand{\AdigraphProcessAugmentingPathsList}{> { \SplitList{;} } m}{%
+			\AdigraphProcessAugmentingPaths##1
+		}
+		\expandafter\NewDocumentCommand\expandafter{\csname #1\endcsname}{m G{}}{%
+			%
+			% ##1 -> Augmenting path
+			%
+			\setcounter{AdigraphCurrentNodeCounter}{0}
+			\setcounter{AdigraphTotalNodeCounter}{0}
+			\setcounter{AdigraphNumberOfPaths}{0}
+			\setcounter{AdigraphCurrentPathNumber}{0}
+			\AdigraphProcessAugmentingPathsList{##1}
+			\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}
+		}%
 	}
-	\expandafter\NewDocumentCommand{\AdigraphProcessAugmentingPathsList}{> { \SplitList{;} } m}{%
-		\AdigraphProcessAugmentingPaths##1
-	}
-	\expandafter\NewDocumentCommand\expandafter{\csname #1\endcsname}{m G{}}{%
-		%
-		% ##1 -> Augmenting path
-		%
-		\AdigraphProcessAugmentingPathsList{##1}
-		\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}
-	}%
 }
+
+\NewDocumentCommand{\RenewAdigraph}{m m G{}}{%
+	%
+	% #1 -> Variable to assign to as command
+	% #2 -> Nodes
+	% #3 -> Edges
+	%
+	\ifcsdef{#1}{
+		\csdef{Adigraph#1AugmentingPaths}{}%
+		\expandafter\RenewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{%
+			\listcsgadd{Adigraph#1AugmentingPaths}{##1}
+		}
+		\expandafter\RenewDocumentCommand{\AdigraphProcessAugmentingPathsList}{> { \SplitList{;} } m}{%
+			\AdigraphProcessAugmentingPaths##1
+		}
+		\expandafter\RenewDocumentCommand\expandafter{\csname #1\endcsname}{m G{}}{%
+			%
+			% ##1 -> Augmenting path
+			%
+			\setcounter{AdigraphCurrentNodeCounter}{0}
+			\setcounter{AdigraphTotalNodeCounter}{0}
+			\setcounter{AdigraphNumberOfPaths}{0}
+			\setcounter{AdigraphCurrentPathNumber}{0}
+			\AdigraphProcessAugmentingPathsList{##1}
+			\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}
+		}%
+	}{
+		\PackageError{adigraph}{%
+			You cannot renew a graph called #1 without having it defined first.
+		}{%
+			Create the first graph using \textbackslash NewAdigraph
+		}
+	}
+}
+
 
 \endinput
 %%

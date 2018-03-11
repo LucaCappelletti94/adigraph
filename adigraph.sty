@@ -109,8 +109,13 @@
 				% This edge will be a straight line
 				\draw[edge,\edgeColor] (#1) to node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#2);
 			}{%
-				% Both edges have to be drawn, they will be curly
-				\draw[edge,\edgeColor] (#1) to [bend right=20] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#2);
+				\IfEq{#1}{#2}{
+					% This is a self loop
+					\draw[edge,\edgeColor] (#1) to [out=270,in=300,looseness=8] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#1);
+				}{
+					% Both edges have to be drawn, they will be curly
+					\draw[edge,\edgeColor] (#1) to [bend right=20] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#2);
+				}
 			}%
 		}%
 	}
@@ -333,6 +338,21 @@
 	\AdigraphBuildEdgeWrapper#1
 }
 
+\NewDocumentCommand{\AdigraphKleeneEdgeBuilder}{m}{%
+	\StrSubstitute{\AdigraphCurrentElaboratingEdge}{*}{#1}[\temp]%
+	\expandafter\AdigraphEdgeBuilder\expandafter{\temp}
+}
+
+\NewDocumentCommand{\AdigraphEdgeRenormalizer}{ m }{%
+	\IfSubStr{#1}{*}{
+		\def\AdigraphCurrentElaboratingEdge{#1}
+		\forlistloop{\AdigraphKleeneEdgeBuilder}{\AdigraphNodeList}
+	}{
+		\AdigraphEdgeBuilder{#1}
+	}
+
+}
+
 \NewDocumentCommand{\AdigraphEdgeDrawer}{ > { \SplitArgument{ 1 } {,} } m }{%
 	\AdigraphDrawEdge#1
 }
@@ -363,7 +383,7 @@
 }
 
 \NewDocumentCommand{\AdigraphProcessEdges}{> { \SplitList{;} } m}{%
-	\ProcessList{#1}{\AdigraphEdgeBuilder}
+	\ProcessList{#1}{\AdigraphEdgeRenormalizer}
 }
 
 \NewDocumentCommand{\AdigraphProcessPaths}{> { \SplitArgument{ 1 } {:} } m}{%
@@ -436,6 +456,7 @@
 	%
 	\def\AdigraphNodeList{}
 	\def\AdigraphEdgeList{}
+	\def\debuggerList{}
 	\letcs{\AdigraphAugmentingPaths}{#3}
 	\begin{tikzpicture}
 		\tikzset{%
@@ -481,6 +502,7 @@
 			\AdigraphProcessCuts{#4}
 		}
 	\end{tikzpicture}
+	\caption{\meaning\AdigraphEdgeList}
 }
 
 \NewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{}

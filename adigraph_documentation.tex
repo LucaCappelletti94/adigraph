@@ -525,6 +525,43 @@ We set its nodes with the following syntax: \textit{<node name: \(x\) coordinate
 	\end{subfigure}
 \end{figure}
 
+\subsection{Kleene star}
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myAdigraph}{
+	1:3;
+	2:3;
+	3:3;
+	4:3;
+	5:3;
+	6:3;
+	7:3;
+	8:3;
+}{
+	1,*,blue;
+	*,4,red;
+}
+\myAdigraph{}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\NewAdigraph{myAdigraph}{
+			1:3;
+			2:3;
+			3:3;
+			4:3;
+			5:3;
+			6:3;
+			7:3;
+			8:3;
+		}{
+			1,*,blue;
+		}
+		\myAdigraph{}
+	\end{subfigure}
+\end{figure}
+
 \section{Augmenting paths}
 An augmenting path is specified by the following syntax: \textit{<comma separated list of nodes:units>}. It is \textbf{very important} to note that incremental paths called upon the same object are memorized by default.
 
@@ -699,7 +736,6 @@ If you'd like to color the cuts you just have to add the color as follows: \text
 		}
 	\end{subfigure}
 \end{figure}
-
 
 \chapter{Warnings}
 \section{Reserved words}

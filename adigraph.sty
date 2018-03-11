@@ -475,11 +475,11 @@
 		}
 
 		% %cuts
-		% \ifblank{#4}{%
-		% 	% List is empty
-		% }{%
-		% 	\AdigraphProcessCuts{#4}
-		% }
+		\ifblank{#4}{%
+			% List is empty
+		}{%
+			\AdigraphProcessCuts{#4}
+		}
 	\end{tikzpicture}
 }
 

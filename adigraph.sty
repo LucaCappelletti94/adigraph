@@ -278,12 +278,12 @@
 	%
 	\pgfmathsetmacro{\sat}{#1+#2}
 	\pgfmathfrac{\sat}
-	\FPifeq{\pgfmathresult}{0}
-	\pgfmathint{\sat}
-	\FPset{#3}{\pgfmathresult}
-	\else
-	\FPset{#3}{\sat}
-	\fi
+	\IfEq{\pgfmathresult}{0.0}{
+		\pgfmathint{\sat}
+		\FPset{#3}{\pgfmathresult}
+	}{
+		\FPset{#3}{\sat}
+	}
 }
 
 \NewDocumentCommand{\AdigraphPathBuilder}{m m m}{%

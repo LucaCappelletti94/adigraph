@@ -6,7 +6,7 @@ It handles automatically the positioning of labels, with the exception of the ho
 **This library is released under MIT license (Copyright 2018 Luca Cappelletti)**.
 
 ## Documentation
-For more information, you can read the documentation available [here](https://github.com/LucaCappelletti94/adigraph/blob/master/documentation.pdf)
+For more information, you can read the documentation available [here](https://github.com/LucaCappelletti94/adigraph/blob/master/adigraph_documentation.pdf)
 
 ## Basic setup
 ### Installing the package
@@ -25,7 +25,7 @@ Remember to require the package in the document.
 ```
 
 ## Basic example
-More examples and step by step explanation is available in the [documentation](https://github.com/LucaCappelletti94/adigraph/blob/master/documentation.pdf).
+More examples and step by step explanation is available in the [documentation](https://github.com/LucaCappelletti94/adigraph/blob/master/adigraph_documentation.pdf).
 
 Suppose you want to create a graph as the following, with an augmenting path highlighted and a couple of cuts:
 

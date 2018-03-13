@@ -9,7 +9,7 @@
 %
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
-[2018/03/10 v1.3 LaTeX package for creating augmenting directed graphs]
+[2018/03/11 v1.4 LaTeX package for creating augmenting directed graphs]
 
 \RequirePackage{etoolbox}
 \RequirePackage{fp}
@@ -26,6 +26,7 @@
 \newcounter{AdigraphCurrentNodeCounter}
 \newcounter{AdigraphNumberOfPaths}
 \newcounter{AdigraphCurrentPathNumber}
+\newcounter{AdigraphAdjacentNodes}
 
 \def\AdigraphZero{0}
 
@@ -40,6 +41,8 @@
 	%
 	\node[vertex,\nodeColor] (#1) at (\nodeX,\nodeY) {\nodeLabel};
 }
+
+\NewDocumentCommand{\sumOfOrientations}{m}{}
 
 \NewDocumentCommand{\AdigraphDrawEdge}{m m}{%
 	%
@@ -127,7 +130,50 @@
 			}{%
 				\IfEq{#1}{#2}{
 					% This is a self loop
-					\draw[edge,\edgeColor] (#1) to [out=270,in=300,looseness=8] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#1);
+					\def\mySinSum{0}
+					\def\myCosSum{0}
+					\setcounter{AdigraphAdjacentNodes}{0}
+					\RenewDocumentCommand{\sumOfOrientations}{m}{
+						%
+						% #1 is name of node
+						%
+						\IfEq{#1}{##1}{
+							% This is the autoloop
+						}{
+							\newcount\myedgecounter
+							\myedgecounter 0\relax
+							\ifcsdef{adigraphEdge#1v##1Weight}{
+								\advance\myedgecounter 1\relax
+							}{}
+							\ifcsdef{adigraphEdge##1v#1Weight}{
+								\advance\myedgecounter 1\relax
+							}{}
+							\ifnumgreater{\the\myedgecounter}{0}{
+								\stepcounter{AdigraphAdjacentNodes}
+								\letcs{\firstX}{adigraphNode#1X}
+								\letcs{\firstY}{adigraphNode#1Y}
+								\letcs{\secondX}{adigraphNode##1X}
+								\letcs{\secondY}{adigraphNode##1Y}
+								\pgfmathsetmacro{\mySinSum}{\mySinSum+sin(atan2(\secondY-\firstY,\secondX-\firstX))}
+								\pgfmathsetmacro{\myCosSum}{\myCosSum+cos(atan2(\secondY-\firstY,\secondX-\firstX))}
+							}{}
+						}
+					}
+					\forlistloop{\sumOfOrientations}{\AdigraphNodeList}
+					\newcount\nodesNumber
+					\nodesNumber \value{AdigraphAdjacentNodes}\relax
+					\IfEq{\the\nodesNumber}{0}{
+						%No elements
+						\pgfmathsetmacro{\centralAngle}{0}
+					}{
+						\newcount\nodesNumber
+						\nodesNumber \value{AdigraphAdjacentNodes}\relax
+						\pgfmathsetmacro{\meanAngle}{atan2(\mySinSum/\the\nodesNumber,\myCosSum/\the\nodesNumber)}
+						\pgfmathsetmacro{\centralAngle}{180+360-max(\meanAngle,360-(\meanAngle))}
+					}
+					\pgfmathsetmacro{\leftAngle}{\centralAngle-35}
+					\pgfmathsetmacro{\rightAngle}{\centralAngle+35}
+					\draw[edge,\edgeColor] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#1);
 				}{
 					% Both edges have to be drawn, they will be curly
 					\draw[edge,\edgeColor] (#1) to [bend right=20] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#2);
@@ -554,7 +600,6 @@
 	%
 	\def\AdigraphNodeList{}
 	\def\AdigraphEdgeList{}
-	\def\debuggerList{}
 	\letcs{\AdigraphAugmentingPaths}{#3}
 	\begin{tikzpicture}
 		\tikzset{%

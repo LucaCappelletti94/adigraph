@@ -793,7 +793,7 @@ The following is to add cuts to show minimum cuts for example, the syntax is: \t
 \end{figure}
 
 \subsection{Colored cuts}
-If you'd like to color the cuts you just have to add the color as follows: \textit{<first node, second node, color;>}
+If you'd like to color the cuts you just have to add the color as follows: \textit{<first node, second node, color;>}. \textbf{Note that if you want to only add a cut and not an augmenting path and a cut, you still need to add the empty curly braces \{\}.}
 
 \begin{figure}
 	\begin{subfigure}{0.49\textwidth}
@@ -801,6 +801,7 @@ If you'd like to color the cuts you just have to add the color as follows: \text
 \myAdigraph{}{
 	3,4,red;
 	2,t,blue;
+	2,4,green;
 }
 \end{minted}
 	\end{subfigure}

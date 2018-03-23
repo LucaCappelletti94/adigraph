@@ -100,6 +100,29 @@
 			3,4,blue;
 		}
 	\end{figure}
+
+	\NewAdigraph{myForthAdigraph}{
+		1:4;
+		2:4;
+		3:4;
+		4:4;
+		5:4;
+		6:4;
+		7:4;
+		8:4;
+	}{
+		1,2:5;
+		2,3:5;
+		3,4:5;
+		4,5:5;
+		5,6:5;
+	}
+
+	\begin{figure}
+		\myForthAdigraph{
+			1,2,3:0;
+		}
+	\end{figure}
 \end{center}
 
 \end{document}

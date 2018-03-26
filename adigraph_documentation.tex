@@ -637,7 +637,64 @@ This works only when you don't have a node called \textit{<+>}. When this happen
 \subsection{Combining Kleene operations}
 Sadly, operations such as \textit{<*,+>} or \textit{<+,+>} are not currently supported and not for lack of trying. I'll try implementing them again in the future when I'll have more time.
 
-\section{Augmenting paths}
+\section{Paths}
+A path is specified by the following syntax: \textit{<comma separated list of nodes>}.
+
+\NewAdigraph{myPathsTestAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+\myAdigraph{
+	s,3,4,2,t;
+}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\myPathsTestAdigraph{
+			s,3,4,2,t;
+		}
+	\end{subfigure}
+\end{figure}
+
+\subsection{Augmenting paths}
 An augmenting path is specified by the following syntax: \textit{<comma separated list of nodes:units>}. It is \textbf{very important} to note that incremental paths called upon the same object are memorized by default.
 
 \NewAdigraph{myAdigraph}{

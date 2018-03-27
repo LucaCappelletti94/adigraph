@@ -29,9 +29,7 @@ More examples and step by step explanation is available in the [documentation](h
 
 Suppose you want to create a graph as the following, with an augmenting path highlighted and a couple of cuts:
 
-<p align="center">
-  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true" width="600px">
-</p>
+![Basic example](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true)
 
 We start by defining a new graph, called *myAdigraph*:
 
@@ -63,9 +61,8 @@ At this point the output is the following:
 \myAdigraph{}
 ```
 
-<p align="center">
-  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_0.jpg?raw=true" width="600px">
-</p>
+![First adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_0.jpg?raw=true)
+
 Then we can add the augmenting path as follows:
 
 ```latex
@@ -74,9 +71,7 @@ Then we can add the augmenting path as follows:
 }
 ```
 
-<p align="center">
-  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_1.jpg?raw=true" width="600px">
-</p>
+![Augmenting adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_1.jpg?raw=true)
 
 And the cuts (remember that the paths from previous steps are memorized by the library) are added as follows:
 
@@ -89,9 +84,7 @@ And the cuts (remember that the paths from previous steps are memorized by the l
 
 The result with the cuts is the following:
 
-<p align="center">
-  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_2.jpg?raw=true" width="600px">
-</p>
+![Cuts adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_2.jpg?raw=true)
 
 You can add both cuts and paths at the same time to keep the latest path highlighted:
 
@@ -104,9 +97,7 @@ You can add both cuts and paths at the same time to keep the latest path highlig
 }
 ```
 
-<p align="center">
-  <img src="https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true" width="600px">
-</p>
+![Cuts adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true)
 
 Have a nice day!
 

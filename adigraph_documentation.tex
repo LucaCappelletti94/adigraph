@@ -828,8 +828,123 @@ For example, suppose now we'd like to send another 5 units on the graph edited b
 	\end{subfigure}
 \end{figure}
 
-\section{Cuts}
+\subsection{Custom colored augmenting Paths}
+A path is specified by the following syntax: \textit{<comma separated list of nodes>:<units>:<forward path color, backward path color>}.
 
+\NewAdigraph{myCustomAugmentingPathAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+\myAdigraph{
+	s,3,4,2,t:5:green,blue;
+}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\myCustomAugmentingPathAdigraph{
+			s,3,4,2,t:5:green,blue;
+		}
+	\end{subfigure}
+\end{figure}
+
+\subsection{Custom colored Paths}
+A path is specified by the following syntax: \textit{<comma separated list of nodes>::<forward path color, backward path color>}. \textbf{Note the double colons!}.
+
+\NewAdigraph{myCustomPathAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+\myAdigraph{
+	s,3,4,2,t::green;
+	s,1,2::red;
+}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\myCustomPathAdigraph{
+			s,1,2::red;
+			s,3,4,2,t::green;
+		}
+	\end{subfigure}
+\end{figure}
+
+\section{Cuts}
 The following is to add cuts to show minimum cuts for example, the syntax is: \textit{<first node, second node;>}
 
 \begin{figure}

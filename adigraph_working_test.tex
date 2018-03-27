@@ -123,6 +123,28 @@
 			1,2,3:0;
 		}
 	\end{figure}
+
+	\NewAdigraph{myFifthAdigraph}{
+		1:4;
+		2:4;
+		3:4;
+		4:4;
+		5:4;
+		6:4;
+		7:4;
+		8:4;
+	}{
+		1,*,red;
+		*,4,blue;
+		2,3;
+		3,4;
+	}
+
+	\begin{figure}
+		\myFifthAdigraph{
+			2,3,4::purple;
+		}
+	\end{figure}
 \end{center}
 
 \end{document}

@@ -334,11 +334,13 @@
 	}
 }
 
-\NewDocumentCommand{\AdigraphPathBuilder}{m m m}{%
+\NewDocumentCommand{\AdigraphPathBuilder}{m m m m m}{%
 	%
 	% #1 -> first node
 	% #2 -> second node
 	% #3 -> units
+	% #4 -> forward color
+	% #5 -> backward color
 	%
 	\ifcsdef{adigraphEdge#1v#2Weight}{%
 		\letcs{\AdigraphWeightA}{adigraphEdge#1v#2Weight}
@@ -352,7 +354,6 @@
 		}
 		\csdef{adigraphEdge#1v#2LabelPosition}{midway}
 		\newbool{adigraphEdge#1v#2Drawn}
-		\csdef{adigraphEdge#1v#2Color}{black}%
 		\listgadd{\AdigraphEdgeList}{#1,#2}
 	}
 	\ifcsdef{adigraphEdge#2v#1Weight}{%
@@ -366,27 +367,49 @@
 			\csdef{adigraphEdge#2v#1LabelPosition}{midway}
 		}
 		\newbool{adigraphEdge#2v#1Drawn}
-		\csdef{adigraphEdge#2v#1Color}{black}%
 		\listgadd{\AdigraphEdgeList}{#2,#1}
 	}
 
-	\ifnum\value{AdigraphCurrentPathNumber}=\value{AdigraphNumberOfPaths}
-		\csdef{adigraphEdge#1v#2Color}{blue}%
-		\csdef{adigraphEdge#2v#1Color}{red}%
-	\else
-		% Leaves the default colors
-	\fi
+	\cslet{adigraphEdge#1v#2Color}{#4}%
+	\cslet{adigraphEdge#2v#1Color}{#5}%
+
 	\expandafter\AdigraphSimpleSum\expandafter{\AdigraphWeightA}{-#3}{\resultA}
 	\expandafter\AdigraphSimpleSum\expandafter{\AdigraphWeightB}{#3}{\resultB}
 	\cslet{adigraphEdge#1v#2Weight}{\resultA}%
 	\cslet{adigraphEdge#2v#1Weight}{\resultB}%
 }
 
-\NewDocumentCommand{\AdigraphBuildPath}{> { \SplitList{,} } m G{0}}{%
+\NewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{black}}{}
+
+\NewDocumentCommand{\AdigraphBuildPath}{> { \SplitList{,} } m G{} > { \SplitArgument{ 1 } {,} } G{}}{%
 	%
 	% #1 -> List of nodes
 	% #2 -> Units to send over path
+	% #3 -> Colors list
 	%
+	\ifblank{#2}{%
+		\FPset{\units}{0}
+	}{
+		\FPset{\units}{#2}
+	}
+
+	\RenewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{black}}{%
+		\ifblank{##1}{
+			\ifnum\value{AdigraphNumberOfPaths}=\value{AdigraphCurrentPathNumber}
+				\def\AdigraphForwardPathColor{red}
+				\def\AdigraphBackwardPathColor{blue}
+			\else
+				\def\AdigraphForwardPathColor{black}
+				\def\AdigraphBackwardPathColor{black}
+			\fi
+		}{
+			\def\AdigraphForwardPathColor{##1}
+			\def\AdigraphBackwardPathColor{##2}
+		}
+	}
+
+	\AdigraphElaboratePathColors#3
+
 	\RenewDocumentCommand{\AdigraphElaboratePath}{m}{%
 		\IfInteger{##1}{%
 			\def\AdigraphCurrentNode{\AdigraphRom{##1}}%
@@ -394,7 +417,7 @@
 			\def\AdigraphCurrentNode{##1}%
 		}%
 		\ifdef{\AdigraphLastParsedNode}{%
-			\expandafter\expandafter\expandafter\AdigraphPathBuilder\expandafter\expandafter\expandafter{\expandafter\AdigraphLastParsedNode\expandafter}\expandafter{\AdigraphCurrentNode}{#2}
+			\expandafter\expandafter\expandafter\AdigraphPathBuilder\expandafter\expandafter\expandafter{\expandafter\AdigraphLastParsedNode\expandafter}\expandafter{\AdigraphCurrentNode}{\units}{\AdigraphForwardPathColor}{\AdigraphBackwardPathColor}
 		}{%
 			% This is the first iteration
 		}
@@ -532,7 +555,7 @@
 	\ProcessList{#1}{\AdigraphFirstEdgeRenormalizer}
 }
 
-\NewDocumentCommand{\AdigraphProcessPaths}{> { \SplitArgument{ 1 } {:} } m}{%
+\NewDocumentCommand{\AdigraphProcessPaths}{> { \SplitArgument{ 2 } {:} } m}{%
 	\stepcounter{AdigraphCurrentPathNumber}
 	\AdigraphBuildPath#1
 }
@@ -670,7 +693,7 @@
 			\listcsgadd{Adigraph#1AugmentingPaths}{##1}
 		}
 		\RenewDocumentCommand{\AdigraphProcessAugmentingPathsList}{> { \SplitList{;} } m}{%
-			\AdigraphProcessAugmentingPaths##1
+			\ProcessList{##1}{\AdigraphProcessAugmentingPaths}
 		}
 		\expandafter\NewDocumentCommand\expandafter{\csname #1\endcsname}{m G{}}{%
 			%

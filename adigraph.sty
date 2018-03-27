@@ -54,46 +54,6 @@
 	\ifbool{adigraphEdge#1v#2Drawn}{%
 		% This edge was already drawn
 	}{%
-		\letcs{\firstX}{adigraphNode#1X}
-		\letcs{\firstY}{adigraphNode#1Y}
-		\letcs{\secondX}{adigraphNode#2X}
-		\letcs{\secondY}{adigraphNode#2Y}
-
-		\providebool{equalX}
-		\FPifeq{\firstX}{\secondX}
-		\booltrue{equalX}
-		\else
-		\boolfalse{equalX}
-		\fi
-
-		\providebool{ltX}
-		\FPiflt{\firstX}{\secondX}
-		\booltrue{ltX}
-		\else
-		\boolfalse{ltX}
-		\fi
-
-		\providebool{ltY}
-		\FPiflt{\firstY}{\secondY}
-		\booltrue{ltY}
-		\else
-		\boolfalse{ltY}
-		\fi
-
-		\ifbool{ltX}{%
-			\def\AdigraphLabelPosition{above}
-		}{%
-			\ifbool{equalX}{%
-				\ifbool{ltY}{%
-					\def\AdigraphLabelPosition{left}
-				}{%
-					\def\AdigraphLabelPosition{right}
-				}
-			}{%
-				\def\AdigraphLabelPosition{below}
-			}
-		}
-
 		\booltrue{adigraphEdge#1v#2Drawn}
 		\letcs{\edgeLabelPosition}{adigraphEdge#1v#2LabelPosition}
 		\letcs{\edgeWeight}{adigraphEdge#1v#2Weight}

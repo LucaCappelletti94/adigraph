@@ -128,7 +128,11 @@
 			\ifbool{secondWeight}{%
 				% The twin edge won't be drawn
 				% This edge will be a straight line
-				\draw[edge,\edgeColor] (#1) to node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#2);
+				\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
+					\draw[edge,\edgeColor] (#1) to (#2);
+				}{
+					\draw[edge,\edgeColor] (#1) to node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
+				}
 			}{%
 				\IfEq{#1}{#2}{
 					% This is a self loop
@@ -175,10 +179,18 @@
 					}
 					\pgfmathsetmacro{\leftAngle}{\centralAngle-35}
 					\pgfmathsetmacro{\rightAngle}{\centralAngle+35}
-					\draw[edge,\edgeColor] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#1);
+					\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
+						\draw[edge,\edgeColor] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8](#1);
+					}{
+						\draw[edge,\edgeColor] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#1);
+					}
 				}{
 					% Both edges have to be drawn, they will be curly
-					\draw[edge,\edgeColor] (#1) to [bend right=20] node[\edgeLabelPosition, \AdigraphLabelPosition] {\edgeLabel}(#2);
+					\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
+						\draw[edge,\edgeColor] (#1) to [bend right=20] (#2);
+					}{
+						\draw[edge,\edgeColor] (#1) to [bend right=20] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
+					}
 				}
 			}%
 		}%
@@ -268,6 +280,7 @@
 					\listxadd{\AdigraphEdgeList}{\AdigraphFirstNode,\AdigraphSecondNode}
 
 					\newbool{adigraphEdge\AdigraphEdgeName HasLabel}
+					\newbool{adigraphEdge\AdigraphEdgeName HasEmptyLabel}
 					\newbool{adigraphEdge\AdigraphEdgeName Drawn}
 					\ifblank{#3}{%
 						\boolfalse{adigraphEdge\AdigraphEdgeName HasLabel}
@@ -276,6 +289,7 @@
 					}%
 					\ifblank{#2}{%
 						\booltrue{adigraphEdge\AdigraphEdgeName HasLabel}
+						\booltrue{adigraphEdge\AdigraphEdgeName HasEmptyLabel}
 						\csdef{adigraphEdge\AdigraphEdgeName Weight}{1}%
 					}{%
 						\csdef{adigraphEdge\AdigraphEdgeName Weight}{#2}%
@@ -347,6 +361,7 @@
 	}{%
 		\def\AdigraphWeightA{0}
 		\newbool{adigraphEdge#1v#2HasLabel}
+		\newbool{adigraphEdge#1v#2HasEmptyLabel}
 		\ifcsdef{adigraphEdge#2v#1LabelPosition}{%
 			\csdef{adigraphEdge#1v#2LabelPosition}{\csuse{adigraphEdge#2v#1LabelPosition}}
 		}{%
@@ -361,6 +376,7 @@
 	}{%
 		\def\AdigraphWeightB{0}
 		\newbool{adigraphEdge#2v#1HasLabel}
+		\newbool{adigraphEdge#2v#1HasEmptyLabel}
 		\ifcsdef{adigraphEdge#1v#2LabelPosition}{%
 			\csdef{adigraphEdge#2v#1LabelPosition}{\csuse{adigraphEdge#1v#2LabelPosition}}
 		}{%

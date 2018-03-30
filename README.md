@@ -15,10 +15,22 @@ If you are on Linux or macOs you can run the following.
 sudo tlmgr install fp etoolbox adigraph
 ```
 
-## Checking the version
-All recent Adigraph versions offer the command ```latex \AdigraphVersionNumber```
-
 Otherwise install the packages with the package manager of your choice.
+
+## Checking the version
+All recent (1.3+) Adigraph versions offer the following command:
+
+```latex
+\AdigraphVersionNumber
+```
+
+If you get an `Undefined control sequence` error you have a version previous to 1.3, you should consider updating it manually.
+
+An approach could be the following:
+
+1. Download the latest version from ctan: [here](https://ctan.org/pkg/adigraph).
+2. Identify the position of the installed adigraph by running `find / -type d -name adigraph`.
+3. Replace the old adigraph.sty with the new adigraph.sty downloaded from ctan.
 
 ### Requiring the package in the document
 Remember to require the package in the document.

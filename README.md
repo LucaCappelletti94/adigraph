@@ -15,6 +15,9 @@ If you are on Linux or macOs you can run the following.
 sudo tlmgr install fp etoolbox adigraph
 ```
 
+## Checking the version
+All recent Adigraph versions offer the command `\AdigraphVersionNumber`{.latex}
+
 Otherwise install the packages with the package manager of your choice.
 
 ### Requiring the package in the document

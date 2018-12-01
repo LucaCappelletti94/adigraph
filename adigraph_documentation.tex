@@ -115,7 +115,9 @@ Here we create a new Adigraph object, called \textit{myAdigraph}.
 	<edges here, separated by semicolon>
 }{
 	<cuts here, separated by semicolon>
-}
+}[
+	<edge style here>
+]
 \end{minted}
 
 \section{Changing an existing graph}
@@ -128,7 +130,9 @@ You can renovate an older graph by calling \textbackslash RenewAdigraph
 	<edges here, separated by semicolon>
 }{
 	<cuts here, separated by semicolon>
-}
+}[
+	<edge style here>
+]
 \end{minted}
 
 \section{Adding nodes}
@@ -985,6 +989,109 @@ If you'd like to color the cuts you just have to add the color as follows: \text
 		}
 	\end{subfigure}
 \end{figure}
+
+\section{Non oriented edges and custom edge stiles}
+If you need non oriented edges or in general to ad a custom style to your edges you can proceed as follows:
+\subsection{Non oriented}
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myCustomEdgesAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}[-]
+\myCustomEdgesAdigraph{}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\NewAdigraph{myCustomEdgesAdigraph}{
+			s:0,0;
+			1:2,2;
+			3:2,-2;
+			2:6,2;
+			4:6,-2;
+			t:8,0;
+		}{
+			s,1:25;
+			s,3:25;
+			3,4:25;
+			1,2:35;
+			2,t:20;
+			4,t:30;
+			3,1:10;
+			4,2:10;
+			2,3:15::near start;
+			4,1:5::near start;
+		}[-]
+		\myCustomEdgesAdigraph{}
+	\end{subfigure}
+\end{figure}
+
+\subsection{Dashed}
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myCustomEdgesAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}[dashed]
+\myCustomEdgesAdigraph{}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\NewAdigraph{myCustomEdgesAdigraph}{
+			s:0,0;
+			1:2,2;
+			3:2,-2;
+			2:6,2;
+			4:6,-2;
+			t:8,0;
+		}{
+			s,1:25;
+			s,3:25;
+			3,4:25;
+			1,2:35;
+			2,t:20;
+			4,t:30;
+			3,1:10;
+			4,2:10;
+			2,3:15::near start;
+			4,1:5::near start;
+		}[dashed]
+		\myCustomEdgesAdigraph{}
+	\end{subfigure}
+\end{figure}
+
 
 \chapter{Warnings}
 \section{Reserved words}

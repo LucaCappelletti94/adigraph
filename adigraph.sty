@@ -7,7 +7,7 @@
 %
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
-\def\AdigraphVersionNumber{v1.5.1}
+\def\AdigraphVersionNumber{v1.6.0}
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
@@ -591,13 +591,14 @@
 	\ProcessList{#1}{\AdigraphCutBuilder}
 }
 
-\NewDocumentCommand{\Adigraph}{m m m m m}{%
+\NewDocumentCommand{\Adigraph}{m m m m m m}{%
 	%
 	% #1 -> Vertices
 	% #2 -> Edges
 	% #3 -> Augmenting paths
 	% #4 -> Cuts
 	% #5 -> Current augmenting paths
+	% #6 -> Style
 	%
 	\def\AdigraphNodeList{}
 	\def\AdigraphEdgeList{}
@@ -605,7 +606,7 @@
 	\begin{tikzpicture}
 		\tikzset{%
 			vertex/.style={circle,draw,minimum size=2em},
-			edge/.style={->,> = latex}
+			edge/.style={#6}
 		}
 
 		% vertices
@@ -651,11 +652,12 @@
 \NewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{}
 \NewDocumentCommand{\AdigraphProcessAugmentingPathsList}{m}{}
 
-\NewDocumentCommand{\NewAdigraph}{m m G{}}{%
+\NewDocumentCommand{\NewAdigraph}{m m G{} O{->,> = latex}}{%
 	%
 	% #1 -> Variable to assign to as command
 	% #2 -> Nodes
 	% #3 -> Edges
+	% #4 -> Style
 	%
 	\ifcsdef{#1}{
 		\PackageError{adigraph}{%
@@ -680,16 +682,17 @@
 			\setcounter{AdigraphNumberOfPaths}{0}
 			\setcounter{AdigraphCurrentPathNumber}{0}
 			\AdigraphProcessAugmentingPathsList{##1}
-			\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}
+			\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}{#4}
 		}%
 	}
 }
 
-\NewDocumentCommand{\RenewAdigraph}{m m G{}}{%
+\NewDocumentCommand{\RenewAdigraph}{m m G{} O{->,> = latex}}{%
 	%
 	% #1 -> Variable to assign to as command
 	% #2 -> Nodes
 	% #3 -> Edges
+	% #4 -> Style
 	%
 	\ifcsdef{#1}{
 		\csdef{Adigraph#1AugmentingPaths}{}%
@@ -708,7 +711,7 @@
 			\setcounter{AdigraphNumberOfPaths}{0}
 			\setcounter{AdigraphCurrentPathNumber}{0}
 			\AdigraphProcessAugmentingPathsList{##1}
-			\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}
+			\Adigraph{#2}{#3}{Adigraph#1AugmentingPaths}{##2}{##1}{#4}
 		}%
 	}{
 		\PackageError{adigraph}{%

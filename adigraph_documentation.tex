@@ -136,7 +136,7 @@ You can renovate an older graph by calling \textbackslash RenewAdigraph
 \end{minted}
 
 \section{Adding nodes}
-We set its nodes with the following syntax: \textit{<node name, color: \(x\) coordinate, \(y\) coordinate: label>}.
+We set its nodes with the following syntax: \textit{<node name, color, border width: \(x\) coordinate, \(y\) coordinate: label>}.
 
 \begin{figure}
 	\begin{subfigure}{0.49\textwidth}
@@ -180,6 +180,28 @@ To color a node you can use the following syntax: \textit{<node name, textual co
 \end{figure}
 
 Tested available colors are: red, blue, black, green. You may extend the possible colors with LaTex libraries such as xcolor.
+
+\subsection{Custom node width}
+To color a node you can use the following syntax: \textit{<node name, textual color, width: \(x\) coordinate, \(y\) coordinate>}. For example:
+
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myAdigraph}{
+ 	s,red,5:0,0;
+ 	t,blue,3:4,0;
+}
+\myAdigraph{}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\NewAdigraph{myAdigraph}{
+			s,red,5:0,0;
+			t,blue,3:4,0;
+		}
+		\myAdigraph{}
+	\end{subfigure}
+\end{figure}
 
 \subsection{Custom node labels}
 To add a custom label you can use the following syntax: either \textit{<node name: \(x\) coordinate, \(y\) coordinate: node label>} or \textit{<node name,textual color: \(x\) coordinate, \(y\) coordinate: node label>} will work:
@@ -272,7 +294,7 @@ When no coordinates are given or you just don't have time to think about where t
 
 
 \section{Adding edges}
-We set its nodes with the following syntax: \textit{<node name: \(x\) coordinate, \(y\) coordinate, color : label>}.
+We set its nodes with the following syntax: \textit{<node name: \(x\) coordinate, \(y\) coordinate, color, edge width: label>}.
 
 \subsection{A simple edge}
 \begin{figure}
@@ -346,6 +368,30 @@ Looped edges position automatically by themselves to minimize overlapping.
 			t:4,0;
 		}{
 			s,t,red;
+		}
+		\myAdigraph{}
+	\end{subfigure}
+\end{figure}
+
+\subsection{A wider simple edge}
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\NewAdigraph{myAdigraph}{
+ 	s:0,0;
+ 	t:4,0;
+}{
+	s,t,red,5;
+}
+\myAdigraph{}
+\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\NewAdigraph{myAdigraph}{
+			s:0,0;
+			t:4,0;
+		}{
+			s,t,red,5;
 		}
 		\myAdigraph{}
 	\end{subfigure}

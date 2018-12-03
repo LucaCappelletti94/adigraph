@@ -7,7 +7,7 @@
 %
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
-\def\AdigraphVersionNumber{v1.6.0}
+\def\AdigraphVersionNumber{v1.6.1}
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
@@ -40,8 +40,9 @@
 	\letcs{\nodeY}{adigraphNode#1Y}
 	\letcs{\nodeLabel}{adigraphNode#1Label}
 	\letcs{\nodeColor}{adigraphNode#1Color}
+	\letcs{\nodeWidth}{adigraphNode#1Width}
 	%
-	\node[vertex,\nodeColor] (#1) at (\nodeX,\nodeY) {\nodeLabel};
+	\node[vertex,\nodeColor,line width=\nodeWidth pt] (#1) at (\nodeX,\nodeY) {\nodeLabel};
 }
 
 \NewDocumentCommand{\sumOfOrientations}{m}{}
@@ -57,6 +58,7 @@
 		\booltrue{adigraphEdge#1v#2Drawn}
 		\letcs{\edgeLabelPosition}{adigraphEdge#1v#2LabelPosition}
 		\letcs{\edgeWeight}{adigraphEdge#1v#2Weight}
+		\letcs{\edgeWidth}{adigraphEdge#1v#2Width}
 		\ifcsdef{adigraphEdge#2v#1Weight}{%
 			\letcs{\AdigraphTwinEdgeWeight}{adigraphEdge#2v#1Weight}
 		}{%
@@ -89,9 +91,9 @@
 				% The twin edge won't be drawn
 				% This edge will be a straight line
 				\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
-					\draw[edge,\edgeColor] (#1) to (#2);
+					\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to (#2);
 				}{
-					\draw[edge,\edgeColor] (#1) to node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
+					\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
 				}
 			}{%
 				\IfEq{#1}{#2}{
@@ -140,16 +142,16 @@
 					\pgfmathsetmacro{\leftAngle}{\centralAngle-35}
 					\pgfmathsetmacro{\rightAngle}{\centralAngle+35}
 					\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
-						\draw[edge,\edgeColor] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8](#1);
+						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8](#1);
 					}{
-						\draw[edge,\edgeColor] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#1);
+						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#1);
 					}
 				}{
 					% Both edges have to be drawn, they will be curly
 					\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
-						\draw[edge,\edgeColor] (#1) to [bend right=20] (#2);
+						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [bend right=20] (#2);
 					}{
-						\draw[edge,\edgeColor] (#1) to [bend right=20] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
+						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [bend right=20] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
 					}
 				}
 			}%
@@ -157,16 +159,16 @@
 	}
 }
 
-\NewDocumentCommand{\AdigraphGenerateNodeName}{m m G{black}}{}
-\NewDocumentCommand{\AdigraphMemorizeNode}{m m G{black}}{}
+\NewDocumentCommand{\AdigraphGenerateNodeName}{m G{black} G{0.4}}{}
+\NewDocumentCommand{\AdigraphMemorizeNode}{m G{}}{}
 
-\NewDocumentCommand{\AdigraphBuildNode}{> { \SplitArgument{ 1 } {,} } m > { \SplitArgument{ 1 } {,} } m m}{%
+\NewDocumentCommand{\AdigraphBuildNode}{> { \SplitArgument{ 2 } {,} } m > { \SplitArgument{ 1 } {,} } m m}{%
 	%
-	% #1 -> given node name, not normalized
-	% #2 -> list of coordinates and color
+	% #1 -> given node name, not normalized, color and width
+	% #2 -> list of coordinates
 	% #3 -> optional label
 	%
-	\RenewDocumentCommand{\AdigraphGenerateNodeName}{m G{black}}{%
+	\RenewDocumentCommand{\AdigraphGenerateNodeName}{m G{black} G{0.4}}{%
 		\IfInteger{##1}{%
 			\def\AdigraphNodeName{\AdigraphRom{##1}}%
 			\listxadd{\AdigraphNodeList}{\AdigraphRom{##1}}
@@ -175,6 +177,7 @@
 			\listxadd{\AdigraphNodeList}{##1}
 		}%
 		\csdef{adigraphNode\AdigraphNodeName Color}{##2}%
+		\csdef{adigraphNode\AdigraphNodeName Width}{##3}%
 		\ifblank{#3}{
 			\csdef{adigraphNode\AdigraphNodeName Label}{##1}%
 		}{
@@ -209,16 +212,16 @@
 	\AdigraphMemorizeNode#2
 }
 
-\NewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black}}{}
+\NewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black} G{0.4}}{}
 
-\NewDocumentCommand{\AdigraphBuildEdge}{> {\SplitArgument{2}{,}} m m m m}{%
+\NewDocumentCommand{\AdigraphBuildEdge}{> {\SplitArgument{3}{,}} m m m m}{%
 	%
-	% #1 -> List of edge nodes and its color, validated
+	% #1 -> List of edge nodes, its color and width
 	% #2 -> Weight
 	% #3 -> Label, defaults to weight
 	% #4 -> Label position, defaults to midway
 	%
-	\RenewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black}}{%
+	\RenewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black} G{0.4}}{%
 		\IfInteger{##1}{%
 			\csedef{AdigraphFirstNode}{\AdigraphRom{##1}}%
 		}{%
@@ -256,6 +259,7 @@
 					}%
 					\csdef{adigraphEdge\AdigraphEdgeName Label}{#3}%
 					\csdef{adigraphEdge\AdigraphEdgeName Color}{##3}%
+					\csdef{adigraphEdge\AdigraphEdgeName Width}{##4}%
 					\csdef{adigraphEdge\AdigraphEdgeName LabelPosition}{#4}%
 				}{
 					\PackageError{adigraph}{%
@@ -308,13 +312,15 @@
 	}
 }
 
-\NewDocumentCommand{\AdigraphPathBuilder}{m m m m m}{%
+\NewDocumentCommand{\AdigraphPathBuilder}{m m m m m m m}{%
 	%
 	% #1 -> first node
 	% #2 -> second node
 	% #3 -> units
 	% #4 -> forward color
 	% #5 -> backward color
+	% #6 -> forward width
+	% #7 -> backward width
 	%
 	\ifcsdef{adigraphEdge#1v#2Weight}{%
 		\letcs{\AdigraphWeightA}{adigraphEdge#1v#2Weight}
@@ -349,6 +355,9 @@
 	\cslet{adigraphEdge#1v#2Color}{#4}%
 	\cslet{adigraphEdge#2v#1Color}{#5}%
 
+	\cslet{adigraphEdge#1v#2Width}{#6}%
+	\cslet{adigraphEdge#2v#1Width}{#7}%
+
 	\expandafter\AdigraphSimpleSum\expandafter{\AdigraphWeightA}{-#3}{\resultA}
 	\expandafter\AdigraphSimpleSum\expandafter{\AdigraphWeightB}{#3}{\resultB}
 	\cslet{adigraphEdge#1v#2Weight}{\resultA}%
@@ -356,12 +365,14 @@
 }
 
 \NewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{black}}{}
+\NewDocumentCommand{\AdigraphElaboratePathWidth}{G{0.4} G{}}{}
 
-\NewDocumentCommand{\AdigraphBuildPath}{> { \SplitList{,} } m G{} > { \SplitArgument{ 1 } {,} } G{}}{%
+\NewDocumentCommand{\AdigraphBuildPath}{> { \SplitList{,} } m G{} > { \SplitArgument{ 1 } {,} } G{} G{}}{%
 	%
 	% #1 -> List of nodes
 	% #2 -> Units to send over path
 	% #3 -> Colors list
+	% #4 -> Width list
 	%
 	\ifblank{#2}{%
 		\FPset{\units}{0}
@@ -386,6 +397,13 @@
 
 	\AdigraphElaboratePathColors#3
 
+	\RenewDocumentCommand{\AdigraphElaboratePathWidth}{G{0.4} G{##1}}{%
+		\def\AdigraphForwardPathWidth{##1}
+		\def\AdigraphBackwardPathWidth{##2}
+	}
+
+	\AdigraphElaboratePathWidth#4
+
 	\RenewDocumentCommand{\AdigraphElaboratePath}{m}{%
 		\IfInteger{##1}{%
 			\def\AdigraphCurrentNode{\AdigraphRom{##1}}%
@@ -393,7 +411,7 @@
 			\def\AdigraphCurrentNode{##1}%
 		}%
 		\ifdef{\AdigraphLastParsedNode}{%
-			\expandafter\expandafter\expandafter\AdigraphPathBuilder\expandafter\expandafter\expandafter{\expandafter\AdigraphLastParsedNode\expandafter}\expandafter{\AdigraphCurrentNode}{\units}{\AdigraphForwardPathColor}{\AdigraphBackwardPathColor}
+			\expandafter\expandafter\expandafter\AdigraphPathBuilder\expandafter\expandafter\expandafter{\expandafter\AdigraphLastParsedNode\expandafter}\expandafter{\AdigraphCurrentNode}{\units}{\AdigraphForwardPathColor}{\AdigraphBackwardPathColor}{\AdigraphBackwardPathWidth}{\AdigraphBackwardPathWidth}
 		}{%
 			% This is the first iteration
 		}
@@ -408,6 +426,9 @@
 }
 
 \NewDocumentCommand{\AdigraphBuildNodeWrapper}{m m G{}}{
+	% #1 -> given node name, not normalized, color and width
+	% #2 -> list of coordinates
+	% #3 -> optional label
 	\ifblank{#1}{
 		%end of list
 	}{
@@ -531,7 +552,11 @@
 	\ProcessList{#1}{\AdigraphFirstEdgeRenormalizer}
 }
 
-\NewDocumentCommand{\AdigraphProcessPaths}{> { \SplitArgument{ 2 } {:} } m}{%
+\NewDocumentCommand{\AdigraphProcessPaths}{> { \SplitArgument{ 3 } {:} } m}{%
+	% #1 -> List of nodes
+	% #2 -> Units to send over path
+	% #3 -> Colors list
+	% #4 -> Width list
 	\stepcounter{AdigraphCurrentPathNumber}
 	\AdigraphBuildPath#1
 }

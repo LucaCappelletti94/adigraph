@@ -1,5 +1,6 @@
 \documentclass{report}
 
+\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{adigraph}
 
 \title{Adigraph, \AdigraphVersionNumber, small working test}
@@ -103,7 +104,7 @@
 
 	\NewAdigraph{myForthAdigraph}{
 		1:4;
-		2,red,1:4;
+		2,Melon,1:4;
 		3:4;
 		4:4;
 		5:4;
@@ -113,7 +114,7 @@
 	}{
 		1,2:5;
 		2,3:5;
-		3,4,blue:10;
+		3,4:10;
 		4,5:5;
 		5,6,purple,5:5;
 	}
@@ -133,7 +134,7 @@
 		7:4;
 		8:4;
 	}{
-		1,*,red;
+		1,*,red!80;
 		*,4,blue;
 		2,3;
 		3,4;

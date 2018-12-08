@@ -42,7 +42,7 @@
 	\letcs{\nodeColor}{adigraphNode#1Color}
 	\letcs{\nodeWidth}{adigraphNode#1Width}
 	%
-	\node[vertex,\nodeColor,line width=\nodeWidth pt] (#1) at (\nodeX,\nodeY) {\nodeLabel};
+	\node[vertex,color=\nodeColor,line width=\nodeWidth pt] (#1) at (\nodeX,\nodeY) {\nodeLabel};
 }
 
 \NewDocumentCommand{\sumOfOrientations}{m}{}
@@ -91,9 +91,9 @@
 				% The twin edge won't be drawn
 				% This edge will be a straight line
 				\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
-					\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to (#2);
+					\draw[edge,color=\edgeColor,line width=\edgeWidth pt] (#1) to (#2);
 				}{
-					\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
+					\draw[edge,color=\edgeColor,line width=\edgeWidth pt] (#1) to node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
 				}
 			}{%
 				\IfEq{#1}{#2}{
@@ -142,16 +142,16 @@
 					\pgfmathsetmacro{\leftAngle}{\centralAngle-35}
 					\pgfmathsetmacro{\rightAngle}{\centralAngle+35}
 					\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
-						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8](#1);
+						\draw[edge,color=\edgeColor,line width=\edgeWidth pt] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8](#1);
 					}{
-						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#1);
+						\draw[edge,color=\edgeColor,line width=\edgeWidth pt] (#1) to [out=\leftAngle,in=\rightAngle,looseness=8] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#1);
 					}
 				}{
 					% Both edges have to be drawn, they will be curly
 					\ifbool{adigraphEdge#1v#2HasEmptyLabel}{
-						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [bend right=20] (#2);
+						\draw[edge,color=\edgeColor,line width=\edgeWidth pt] (#1) to [bend right=20] (#2);
 					}{
-						\draw[edge,\edgeColor,line width=\edgeWidth pt] (#1) to [bend right=20] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
+						\draw[edge,color=\edgeColor,line width=\edgeWidth pt] (#1) to [bend right=20] node[\edgeLabelPosition, fill=white] {\edgeLabel}(#2);
 					}
 				}
 			}%

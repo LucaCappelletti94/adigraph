@@ -20,8 +20,13 @@
 \RequirePackage{tikz}
 \usetikzlibrary{calc}
 
+\def\AdigraphZero{0}
+\def\AdigraphTextualZero{zero}
+\def\AdigraphDefaultColor{black}
+\def\AdigraphDefaultWidth{0.4}
+
 \makeatletter
-\newcommand*{\AdigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\newcommand{\AdigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
 
 \newcounter{AdigraphTotalNodeCounter}
@@ -29,8 +34,6 @@
 \newcounter{AdigraphNumberOfPaths}
 \newcounter{AdigraphCurrentPathNumber}
 \newcounter{AdigraphAdjacentNodes}
-
-\def\AdigraphZero{0}
 
 \NewDocumentCommand{\AdigraphDrawNode}{m}{%
 	%
@@ -159,7 +162,7 @@
 	}
 }
 
-\NewDocumentCommand{\AdigraphGenerateNodeName}{m G{black} G{0.4}}{}
+\NewDocumentCommand{\AdigraphGenerateNodeName}{m G{\AdigraphDefaultColor} G{\AdigraphDefaultWidth}}{}
 \NewDocumentCommand{\AdigraphMemorizeNode}{m G{}}{}
 
 \NewDocumentCommand{\AdigraphBuildNode}{> { \SplitArgument{ 2 } {,} } m > { \SplitArgument{ 1 } {,} } m m}{%
@@ -168,16 +171,33 @@
 	% #2 -> list of coordinates
 	% #3 -> optional label
 	%
-	\RenewDocumentCommand{\AdigraphGenerateNodeName}{m G{black} G{0.4}}{%
+	\RenewDocumentCommand{\AdigraphGenerateNodeName}{m G{\AdigraphDefaultColor} G{\AdigraphDefaultWidth}}{%
+		%
+		% ##1 -> node name, not normalized
+		% ##2 -> color
+		% ##3 -> width
+		%
 		\IfInteger{##1}{%
-			\def\AdigraphNodeName{\AdigraphRom{##1}}%
-			\listxadd{\AdigraphNodeList}{\AdigraphRom{##1}}
+			\IfEq{##1}{\AdigraphZero}{
+				\def\AdigraphNodeName{\AdigraphTextualZero}%
+			}{
+				\def\AdigraphNodeName{\AdigraphRom{##1}}%
+			}
 		}{%
 			\def\AdigraphNodeName{##1}%
-			\listxadd{\AdigraphNodeList}{##1}
 		}%
-		\csdef{adigraphNode\AdigraphNodeName Color}{##2}%
-		\csdef{adigraphNode\AdigraphNodeName Width}{##3}%
+		\listxadd{\AdigraphNodeList}{\AdigraphNodeName}
+		\ifblank{##2}{
+			\csdef{adigraphNode\AdigraphNodeName Color}{\AdigraphDefaultColor}%
+		}{
+			\csdef{adigraphNode\AdigraphNodeName Color}{##2}%
+		}
+		\ifblank{##3}{
+			\csdef{adigraphNode\AdigraphNodeName Width}{\AdigraphDefaultWidth}%
+		}{
+			\csdef{adigraphNode\AdigraphNodeName Width}{##3}%
+		}
+
 		\ifblank{#3}{
 			\csdef{adigraphNode\AdigraphNodeName Label}{##1}%
 		}{
@@ -212,7 +232,7 @@
 	\AdigraphMemorizeNode#2
 }
 
-\NewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black} G{0.4}}{}
+\NewDocumentCommand{\AdigraphMemorizeEdge}{m m G{\AdigraphDefaultColor} G{\AdigraphDefaultWidth}}{}
 
 \NewDocumentCommand{\AdigraphBuildEdge}{> {\SplitArgument{3}{,}} m m m m}{%
 	%
@@ -221,14 +241,28 @@
 	% #3 -> Label, defaults to weight
 	% #4 -> Label position, defaults to midway
 	%
-	\RenewDocumentCommand{\AdigraphMemorizeEdge}{m m G{black} G{0.4}}{%
+	\RenewDocumentCommand{\AdigraphMemorizeEdge}{m m G{\AdigraphDefaultColor} G{\AdigraphDefaultWidth}}{%
+		%
+		% ##1 -> first edge
+		% ##2 -> second edge
+		% ##3 -> color
+		% ##4 -> width
+		%
 		\IfInteger{##1}{%
-			\csedef{AdigraphFirstNode}{\AdigraphRom{##1}}%
+			\IfEq{##1}{\AdigraphZero}{
+				\csedef{AdigraphFirstNode}{\AdigraphTextualZero}%
+			}{
+				\csedef{AdigraphFirstNode}{\AdigraphRom{##1}}%
+			}
 		}{%
 			\csedef{AdigraphFirstNode}{##1}%
 		}%
 		\IfInteger{##2}{%
-			\csedef{AdigraphSecondNode}{\AdigraphRom{##2}}%
+			\IfEq{##2}{\AdigraphZero}{
+				\csedef{AdigraphSecondNode}{\AdigraphTextualZero}%
+			}{
+				\csedef{AdigraphSecondNode}{\AdigraphRom{##2}}%
+			}
 		}{%
 			\csedef{AdigraphSecondNode}{##2}%
 		}%
@@ -258,8 +292,16 @@
 						\csdef{adigraphEdge\AdigraphEdgeName Weight}{#2}%
 					}%
 					\csdef{adigraphEdge\AdigraphEdgeName Label}{#3}%
-					\csdef{adigraphEdge\AdigraphEdgeName Color}{##3}%
-					\csdef{adigraphEdge\AdigraphEdgeName Width}{##4}%
+					\ifblank{##3}{
+						\csdef{adigraphEdge\AdigraphEdgeName Color}{\AdigraphDefaultColor}%
+					}{
+						\csdef{adigraphEdge\AdigraphEdgeName Color}{##3}%
+					}
+					\ifblank{##4}{
+						\csdef{adigraphEdge\AdigraphEdgeName Width}{\AdigraphDefaultWidth}%
+					}{
+						\csdef{adigraphEdge\AdigraphEdgeName Width}{##4}%
+					}
 					\csdef{adigraphEdge\AdigraphEdgeName LabelPosition}{#4}%
 				}{
 					\PackageError{adigraph}{%
@@ -294,7 +336,7 @@
 	}
 }
 
-\NewDocumentCommand{\AdigraphElaboratePath}{m m G{black}}{}
+\NewDocumentCommand{\AdigraphElaboratePath}{m m G{\AdigraphDefaultColor}}{}
 
 \NewDocumentCommand{\AdigraphSimpleSum}{m m m}{%
 	%
@@ -352,11 +394,26 @@
 		\listgadd{\AdigraphEdgeList}{#2,#1}
 	}
 
-	\cslet{adigraphEdge#1v#2Color}{#4}%
-	\cslet{adigraphEdge#2v#1Color}{#5}%
-
-	\cslet{adigraphEdge#1v#2Width}{#6}%
-	\cslet{adigraphEdge#2v#1Width}{#7}%
+	\ifblank{#4}{
+		\cslet{adigraphEdge#1v#2Color}{\AdigraphDefaultColor}%
+	}{
+		\cslet{adigraphEdge#1v#2Color}{#4}%
+	}
+	\ifblank{#5}{
+		\cslet{adigraphEdge#2v#1Color}{\AdigraphDefaultColor}%
+	}{
+		\cslet{adigraphEdge#2v#1Color}{#5}%
+	}
+	\ifblank{#6}{
+		\cslet{adigraphEdge#1v#2Width}{\AdigraphDefaultWidth}%
+	}{
+		\cslet{adigraphEdge#1v#2Width}{#6}%
+	}
+	\ifblank{#7}{
+		\cslet{adigraphEdge#2v#1Width}{\AdigraphDefaultWidth}%
+	}{
+		\cslet{adigraphEdge#2v#1Width}{#7}%
+	}
 
 	\expandafter\AdigraphSimpleSum\expandafter{\AdigraphWeightA}{-#3}{\resultA}
 	\expandafter\AdigraphSimpleSum\expandafter{\AdigraphWeightB}{#3}{\resultB}
@@ -364,8 +421,8 @@
 	\cslet{adigraphEdge#2v#1Weight}{\resultB}%
 }
 
-\NewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{black}}{}
-\NewDocumentCommand{\AdigraphElaboratePathWidth}{G{0.4} G{}}{}
+\NewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{\AdigraphDefaultColor}}{}
+\NewDocumentCommand{\AdigraphElaboratePathWidth}{G{\AdigraphDefaultWidth} G{}}{}
 
 \NewDocumentCommand{\AdigraphBuildPath}{> { \SplitList{,} } m G{} > { \SplitArgument{ 1 } {,} } G{} G{}}{%
 	%
@@ -380,33 +437,53 @@
 		\FPset{\units}{#2}
 	}
 
-	\RenewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{black}}{%
+	\RenewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{\AdigraphDefaultColor}}{%
 		\ifblank{##1}{
 			\ifnum\value{AdigraphNumberOfPaths}=\value{AdigraphCurrentPathNumber}
 				\def\AdigraphForwardPathColor{red}
 				\def\AdigraphBackwardPathColor{blue}
 			\else
-				\def\AdigraphForwardPathColor{black}
-				\def\AdigraphBackwardPathColor{black}
+				\def\AdigraphForwardPathColor{\AdigraphDefaultColor}
+				\def\AdigraphBackwardPathColor{\AdigraphDefaultColor}
 			\fi
 		}{
-			\def\AdigraphForwardPathColor{##1}
-			\def\AdigraphBackwardPathColor{##2}
+			\ifblank{##1}{
+				\def\AdigraphForwardPathColor{\AdigraphDefaultColor}
+			}{
+				\def\AdigraphForwardPathColor{##1}
+			}
+			\ifblank{##2}{
+				\def\AdigraphBackwardPathColor{\AdigraphDefaultColor}
+			}{
+				\def\AdigraphBackwardPathColor{##2}
+			}
 		}
 	}
 
 	\AdigraphElaboratePathColors#3
 
-	\RenewDocumentCommand{\AdigraphElaboratePathWidth}{G{0.4} G{##1}}{%
-		\def\AdigraphForwardPathWidth{##1}
-		\def\AdigraphBackwardPathWidth{##2}
+	\RenewDocumentCommand{\AdigraphElaboratePathWidth}{G{\AdigraphDefaultWidth} G{##1}}{%
+		\ifblank{##1}{
+			\def\AdigraphForwardPathWidth{\AdigraphDefaultWidth}
+		}{
+			\def\AdigraphForwardPathWidth{##1}
+		}
+		\ifblank{##2}{
+			\def\AdigraphBackwardPathWidth{\AdigraphDefaultWidth}
+		}{
+			\def\AdigraphBackwardPathWidth{##2}
+		}
 	}
 
 	\AdigraphElaboratePathWidth#4
 
 	\RenewDocumentCommand{\AdigraphElaboratePath}{m}{%
 		\IfInteger{##1}{%
-			\def\AdigraphCurrentNode{\AdigraphRom{##1}}%
+			\IfEq{##1}{\AdigraphZero}{
+				\def\AdigraphCurrentNode{\AdigraphTextualZero}%
+			}{
+				\def\AdigraphCurrentNode{\AdigraphRom{##1}}%
+			}
 		}{%
 			\def\AdigraphCurrentNode{##1}%
 		}%
@@ -416,7 +493,11 @@
 			% This is the first iteration
 		}
 		\IfInteger{##1}{%
-			\def\AdigraphLastParsedNode{\AdigraphRom{##1}}%
+			\IfEq{##1}{\AdigraphZero}{
+				\def\AdigraphLastParsedNode{\AdigraphTextualZero}%
+			}{
+				\def\AdigraphLastParsedNode{\AdigraphRom{##1}}%
+			}
 		}{%
 			\def\AdigraphLastParsedNode{##1}%
 		}%
@@ -589,17 +670,25 @@
 	}
 }
 
-\NewDocumentCommand{\AdigraphExecuteCutBuilder}{m m G{black}}{%
+\NewDocumentCommand{\AdigraphExecuteCutBuilder}{m m G{\AdigraphDefaultColor}}{%
 \ifblank{#1}{%
 % Reached end of list
 }{%
 \IfInteger{#1}{%
-	\def\AdigraphFirstNode{\AdigraphRom{#1}}%
+	\IfEq{#1}{\AdigraphZero}{
+		\def\AdigraphFirstNode{\AdigraphTextualZero}%
+	}{
+		\def\AdigraphFirstNode{\AdigraphRom{#1}}%
+	}
 }{%
 	\def\AdigraphFirstNode{#1}%
 }%
 \IfInteger{#2}{%
-	\def\AdigraphSecondNode{\AdigraphRom{#2}}%
+	\IfEq{#2}{\AdigraphZero}{
+		\def\AdigraphSecondNode{\AdigraphTextualZero}%
+	}{
+		\def\AdigraphSecondNode{\AdigraphRom{#2}}%
+	}
 }{%
 	\def\AdigraphSecondNode{#2}%
 }%

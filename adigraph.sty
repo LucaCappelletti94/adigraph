@@ -7,7 +7,7 @@
 %
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
-\def\AdigraphVersionNumber{v1.6.1}
+\def\AdigraphVersionNumber{v1.7.0}
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
@@ -24,6 +24,8 @@
 \def\AdigraphTextualZero{zero}
 \def\AdigraphDefaultColor{black}
 \def\AdigraphDefaultWidth{0.4}
+\def\AdigraphRed{red!90}
+\def\AdigraphCyan{cyan!90}
 
 \makeatletter
 \newcommand{\AdigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
@@ -440,18 +442,14 @@
 	\RenewDocumentCommand{\AdigraphElaboratePathColors}{G{} G{\AdigraphDefaultColor}}{%
 		\ifblank{##1}{
 			\ifnum\value{AdigraphNumberOfPaths}=\value{AdigraphCurrentPathNumber}
-				\def\AdigraphForwardPathColor{red}
-				\def\AdigraphBackwardPathColor{blue}
+				\def\AdigraphForwardPathColor{\AdigraphRed}
+				\def\AdigraphBackwardPathColor{\AdigraphCyan}
 			\else
 				\def\AdigraphForwardPathColor{\AdigraphDefaultColor}
 				\def\AdigraphBackwardPathColor{\AdigraphDefaultColor}
 			\fi
 		}{
-			\ifblank{##1}{
-				\def\AdigraphForwardPathColor{\AdigraphDefaultColor}
-			}{
-				\def\AdigraphForwardPathColor{##1}
-			}
+			\def\AdigraphForwardPathColor{##1}
 			\ifblank{##2}{
 				\def\AdigraphBackwardPathColor{\AdigraphDefaultColor}
 			}{

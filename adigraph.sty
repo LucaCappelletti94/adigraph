@@ -7,7 +7,7 @@
 %
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
-\def\AdigraphVersionNumber{v1.7.0}
+\def\AdigraphVersionNumber{v1.7.1}
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{adigraph}
@@ -26,6 +26,8 @@
 \def\AdigraphDefaultWidth{0.4}
 \def\AdigraphRed{red!90}
 \def\AdigraphCyan{cyan!90}
+\providebool{AdigraphDrawGraphs}
+\booltrue{AdigraphDrawGraphs}
 
 \makeatletter
 \newcommand{\AdigraphRom}[1]{\expandafter\@slowromancap\romannumeral #1@}
@@ -712,53 +714,55 @@
 	% #5 -> Current augmenting paths
 	% #6 -> Style
 	%
-	\def\AdigraphNodeList{}
-	\def\AdigraphEdgeList{}
-	\letcs{\AdigraphAugmentingPaths}{#3}
-	\begin{tikzpicture}
-		\tikzset{%
-			vertex/.style={circle,draw,minimum size=2em},
-			edge/.style={#6}
-		}
-
-		% vertices
-		\ifblank{#1}{%
-			% List is empty
-		}{%
-			\AdigraphNodesCounter{#1}
-			\AdigraphProcessNodes{#1}
-		}
-
-		\ifblank{#2}{%
-			% List is empty
-		}{%
-			\AdigraphProcessEdges{#2}
-		}
-
-		\ifblank{\AdigraphAugmentingPaths}{%
-			% List is empty
-		}{%
-			\ifblank{#5}{%
-				\defcounter{AdigraphNumberOfPaths}{100000}
-			}{%
+	\ifbool{AdigraphDrawGraphs}{%
+		\def\AdigraphNodeList{}
+		\def\AdigraphEdgeList{}
+		\letcs{\AdigraphAugmentingPaths}{#3}
+		\begin{tikzpicture}
+			\tikzset{%
+				vertex/.style={circle,draw,minimum size=2em},
+				edge/.style={#6}
 			}
-			\forlistloop{\AdigraphCountPaths}{\AdigraphAugmentingPaths}
-			\forlistloop{\AdigraphProcessPaths}{\AdigraphAugmentingPaths}
-		}
 
-		\ifblank{#2}{%
-			% List is empty
-		}{%
-			\forlistloop{\AdigraphEdgeDrawer}{\AdigraphEdgeList}
-		}
+			% vertices
+			\ifblank{#1}{%
+				% List is empty
+			}{%
+				\AdigraphNodesCounter{#1}
+				\AdigraphProcessNodes{#1}
+			}
 
-		% %cuts
-		\ifblank{#4}{%
-			% List is empty
-		}{%
-			\AdigraphProcessCuts{#4}
-		}
-	\end{tikzpicture}
+			\ifblank{#2}{%
+				% List is empty
+			}{%
+				\AdigraphProcessEdges{#2}
+			}
+
+			\ifblank{\AdigraphAugmentingPaths}{%
+				% List is empty
+			}{%
+				\ifblank{#5}{%
+					\defcounter{AdigraphNumberOfPaths}{100000}
+				}{%
+				}
+				\forlistloop{\AdigraphCountPaths}{\AdigraphAugmentingPaths}
+				\forlistloop{\AdigraphProcessPaths}{\AdigraphAugmentingPaths}
+			}
+
+			\ifblank{#2}{%
+				% List is empty
+			}{%
+				\forlistloop{\AdigraphEdgeDrawer}{\AdigraphEdgeList}
+			}
+
+			% %cuts
+			\ifblank{#4}{%
+				% List is empty
+			}{%
+				\AdigraphProcessCuts{#4}
+			}
+		\end{tikzpicture}
+	}{}
 }
 
 \NewDocumentCommand{\AdigraphProcessAugmentingPaths}{m}{}
@@ -832,6 +836,14 @@
 			Create the first graph using \textbackslash NewAdigraph
 		}
 	}
+}
+
+\NewDocumentCommand{\DisableAdigraphs}{}{%
+	\boolfalse{AdigraphDrawGraphs}
+}
+
+\NewDocumentCommand{\EnableAdigraphs}{}{%
+	\booltrue{AdigraphDrawGraphs}
 }
 
 

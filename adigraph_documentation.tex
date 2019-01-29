@@ -1227,6 +1227,19 @@ And once you compile that you receive a graph like the following:
 	\includegraphics[width=0.5\textwidth]{img_examples/pyadigraph.png}
 \end{figure}
 
+\chapter{Utilities}
+If for some reason you need to disable all the adigraphs in your latex code, for example using an online editor such as Overleaf that allows only a given maximum compile time, you can use the following command:
+
+\begin{minted}{latex}
+	\DisableAdigraphs
+\end{minted}
+
+You can then re-enable adigraphs with:
+
+\begin{minted}{latex}
+	\EnableAdigraphs
+\end{minted}
+
 \chapter{Warnings}
 \section{Reserved words}
 I reserve to use for the package the following tokens:
@@ -1266,6 +1279,7 @@ I reserve to use for the package the following tokens:
 		\item \textbackslash AdigraphSimpleSum
 		\item \textbackslash NewAdigraph
 		\item \textbackslash RenewAdigraph
+		\item \textbackslash DisableAdigraphs
 	\end{enumerate}
 \end{multicols}
 

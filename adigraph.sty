@@ -26,6 +26,9 @@
 \def\AdigraphDefaultWidth{0.4}
 \def\AdigraphRed{red!90}
 \def\AdigraphCyan{cyan!90}
+\newlength{\AdigraphNodeMinSize}
+\setlength{\AdigraphNodeMinSize}{2em}
+
 \providebool{AdigraphDrawGraphs}
 \booltrue{AdigraphDrawGraphs}
 
@@ -720,7 +723,7 @@
 		\letcs{\AdigraphAugmentingPaths}{#3}
 		\begin{tikzpicture}
 			\tikzset{%
-				vertex/.style={circle,draw,minimum size=2em},
+				vertex/.style={circle,draw,minimum size=\AdigraphNodeMinSize},
 				edge/.style={#6}
 			}
 

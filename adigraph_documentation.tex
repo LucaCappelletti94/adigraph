@@ -2,7 +2,7 @@
 
 \title{Adigraph, \AdigraphVersionNumber}
 \author{Luca Cappelletti}
-\date{December 2018}
+\date{April 2021}
 
 \usepackage{adigraph}
 \usepackage{xcolor}
@@ -12,6 +12,8 @@
 \usepackage{graphicx} % for images and generally graphics
 \usepackage{caption} % enabling of nice captions
 \usepackage{subcaption} % and subcaptions of images
+\usepackage[margin=1in]{geometry}
+
 \definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
 \setminted{
   bgcolor=mintedbackground,
@@ -111,11 +113,11 @@ Here we create a new Adigraph object, called \textit{myAdigraph}.
 \begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
 	<nodes here, separated by semicolon>
-}{
+	}{
 	<edges here, separated by semicolon>
-}{
+	}{
 	<cuts here, separated by semicolon>
-}[
+	}[
 	<edge style here>
 ]
 \end{minted}
@@ -126,11 +128,11 @@ You can renovate an older graph by calling \textbackslash RenewAdigraph
 \begin{minted}{latex}
 \RenewAdigraph{myAdigraph}{
 	<nodes here, separated by semicolon>
-}{
+	}{
 	<edges here, separated by semicolon>
-}{
+	}{
 	<cuts here, separated by semicolon>
-}[
+	}[
 	<edge style here>
 ]
 \end{minted}
@@ -142,13 +144,14 @@ We set its nodes with the following syntax: \textit{<node name[, textual color, 
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
+	s:0,0;
+	t:4,0;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
@@ -164,13 +167,14 @@ To color a node you can use the following syntax: \textit{<node name[, textual c
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s,red:0,0;
- 	t,blue:4,0;
+	s,red:0,0;
+	t,blue:4,0;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s,red:0,0;
 			t,blue:4,0;
@@ -188,13 +192,14 @@ To color a node you can use the following syntax: \textit{<node name[, textual c
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s,red,5:0,0;
- 	t,blue,3:4,0;
+	s,red,5:0,0;
+	t,blue,3:4,0;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s,red,5:0,0;
 			t,blue,3:4,0;
@@ -210,13 +215,14 @@ To add a custom label you can use the following syntax: either \textit{<node nam
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s,red:0,0:start;
- 	t:4,0:end;
+	s,red:0,0:start;
+	t:4,0:end;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s,red:0,0:start;
 			t:4,0:end;
@@ -242,9 +248,10 @@ When no coordinates are given or you just don't have time to think about where t
 	8:2;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.35\textwidth}
 		\NewAdigraph{myAdigraph}{
 			1:0,0;
 			2:2;
@@ -262,7 +269,7 @@ When no coordinates are given or you just don't have time to think about where t
 \subsection{Colored automatically positioned nodes}
 
 \begin{figure}
-	\begin{subfigure}{0.49\textwidth}
+	\begin{subfigure}{0.35\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
 	1:0,0;
@@ -275,9 +282,10 @@ When no coordinates are given or you just don't have time to think about where t
 	8,pink:2;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			1:0,0;
 			2,purple:2;
@@ -301,19 +309,20 @@ We set its edges with the following syntax: \textit{<first node, second node,[co
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t;
 		}
 		\myAdigraph{}
@@ -326,21 +335,22 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,s;
 	t,t;
 	s,t;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,s;
 			t,t;
 			s,t;
@@ -354,19 +364,20 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t,red;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t,red;
 		}
 		\myAdigraph{}
@@ -378,19 +389,20 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t,red,5;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t,red,5;
 		}
 		\myAdigraph{}
@@ -402,19 +414,20 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t:56;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t:56;
 		}
 		\myAdigraph{}
@@ -426,19 +439,20 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t:56:myLabel;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t:56:myLabel;
 		}
 		\myAdigraph{}
@@ -450,20 +464,21 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t;
 	t,s;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t;
 			t,s;
 		}
@@ -476,20 +491,21 @@ Looped edges position automatically by themselves to minimize overlapping.
 	\begin{subfigure}{0.49\textwidth}
 		\begin{minted}{latex}
 \NewAdigraph{myAdigraph}{
- 	s:0,0;
- 	t:4,0;
-}{
+	s:0,0;
+	t:4,0;
+	}{
 	s,t:5;
 	t,s:5;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
-		}{
+			}{
 			s,t:5;
 			t,s:5;
 		}
@@ -506,20 +522,21 @@ Looped edges position automatically by themselves to minimize overlapping.
 	2:0,2;
 	3:4,2;
 	4:4,0;
-}{
+	}{
 	1,3,red:1:a:near start;
 	2,4,blue:1:b:near end;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			1:0,0;
 			2:0,2;
 			3:4,2;
 			4:4,0;
-		}{
+			}{
 			1,3,red:1:a:near start;
 			2,4,blue:1:b:near end;
 		}
@@ -536,24 +553,25 @@ Looped edges position automatically by themselves to minimize overlapping.
 	2:0,2;
 	3:4,2;
 	4:4,0;
-}{
+	}{
 	1,3,red:1::near start;
 	2,4,blue:1::near end;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
-		\NewAdigraph{myAdigraph}{
-			1:0,0;
-			2:0,2;
-			3:4,2;
-			4:4,0;
-		}{
-			1,3,red:1::near start;
-			2,4,blue:1::near end;
-		}
-		\myAdigraph{}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
+\NewAdigraph{myAdigraph}{
+	1:0,0;
+	2:0,2;
+	3:4,2;
+	4:4,0;
+	}{
+	1,3,red:1::near start;
+	2,4,blue:1::near end;
+}
+\myAdigraph{}
 	\end{subfigure}
 \end{figure}
 
@@ -567,7 +585,7 @@ Looped edges position automatically by themselves to minimize overlapping.
 	t:4,0;
 	1:0,3;
 	2:4,3;
-}{
+	}{
 	s,t:5;
 	t,s:5;
 	s,1:5;
@@ -580,15 +598,16 @@ Looped edges position automatically by themselves to minimize overlapping.
 	1,t:5;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			s:0,0;
 			t:4,0;
 			1:0,3;
 			2:4,3;
-		}{
+			}{
 			s,t:5;
 			t,s:5;
 			s,1:5;
@@ -619,14 +638,15 @@ This works only when you don't have a node called \textit{<*>}. When this happen
 	6:3;
 	7:3;
 	8:3;
-}{
+	}{
 	1,*,blue;
 	*,4,red;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			1:3;
 			2:3;
@@ -636,7 +656,7 @@ This works only when you don't have a node called \textit{<*>}. When this happen
 			6:3;
 			7:3;
 			8:3;
-		}{
+			}{
 			1,*,blue;
 			*,4,red;
 		}
@@ -658,14 +678,15 @@ This works only when you don't have a node called \textit{<+>}. When this happen
 	6:3;
 	7:3;
 	8:3;
-}{
+	}{
 	1,+,blue;
 	+,4;
 }
 \myAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
+	\hfill
+	\begin{subfigure}{0.4\textwidth}
 		\NewAdigraph{myAdigraph}{
 			1:3;
 			2:3;
@@ -675,7 +696,7 @@ This works only when you don't have a node called \textit{<+>}. When this happen
 			6:3;
 			7:3;
 			8:3;
-		}{
+			}{
 			1,+,blue;
 			+,4;
 		}
@@ -697,7 +718,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -720,7 +741,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -735,8 +756,9 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 \myAdigraph{
 	s,3,4,2,t;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
+	\hfill
 	\begin{subfigure}{0.49\textwidth}
 		\myPathsTestAdigraph{
 			s,3,4,2,t;
@@ -754,7 +776,7 @@ An augmenting path is specified by the following syntax: \textit{<comma separate
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -777,7 +799,7 @@ An augmenting path is specified by the following syntax: \textit{<comma separate
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -792,7 +814,7 @@ An augmenting path is specified by the following syntax: \textit{<comma separate
 \myAdigraph{
 	s,3,4,2,t:5;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{
@@ -809,7 +831,7 @@ For example, suppose now we'd like to send another 5 units on the graph edited b
 \myAdigraph{
 	s,3,4,1,2,t:5;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{
@@ -824,7 +846,7 @@ For example, suppose now we'd like to send another 5 units on the graph edited b
 \myAdigraph{
 	s,3,4,t:15;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{
@@ -839,7 +861,7 @@ For example, suppose now we'd like to send another 5 units on the graph edited b
 \myAdigraph{
 	s,1,4,t:5;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{
@@ -854,7 +876,7 @@ For example, suppose now we'd like to send another 5 units on the graph edited b
 \myAdigraph{
 	s,1,2,t:10;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{
@@ -869,7 +891,7 @@ For example, suppose now we'd like to send another 5 units on the graph edited b
 \myAdigraph{
 	s,1,2,4,t:5;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{
@@ -888,7 +910,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -911,7 +933,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -926,7 +948,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 \myAdigraph{
 	s,3,4,2,t:5:green,blue;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myCustomAugmentingPathAdigraph{
@@ -945,7 +967,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -968,7 +990,7 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -984,12 +1006,72 @@ A path is specified by the following syntax: \textit{<comma separated list of no
 	s,3,4,2,t::green;
 	s,1,2::red;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myCustomPathAdigraph{
 			s,1,2::red;
 			s,3,4,2,t::green;
+		}
+	\end{subfigure}
+\end{figure}
+
+\subsection{Minimum node size}
+You can specify the minimum node size setting the  \textbackslash AdigraphNodeMinSize variable as follows:
+
+\begin{figure}
+	\begin{subfigure}{0.49\textwidth}
+		\begin{minted}{latex}
+\setlength{\AdigraphNodeMinSize}{5em}
+\NewAdigraph{myAdigraph}{
+	s:0,0;
+	1:2,2;
+	3:2,-2;
+	2:6,2;
+	4:6,-2;
+	t:8,0;
+	}{
+	s,1:25;
+	s,3:25;
+	3,4:25;
+	1,2:35;
+	2,t:20;
+	4,t:30;
+	3,1:10;
+	4,2:10;
+	2,3:15::near start;
+	4,1:5::near start;
+}
+\myAdigraph{
+	s,3,4,2,t::green;
+	s,1,2::red;
+}
+		\end{minted}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\setlength{\AdigraphNodeMinSize}{5em}
+		\NewAdigraph{resizedAdigraph}{
+			s:0,0;
+			1:2,2;
+			3:2,-2;
+			2:6,2;
+			4:6,-2;
+			t:8,0;
+			}{
+			s,1:25;
+			s,3:25;
+			3,4:25;
+			1,2:35;
+			2,t:20;
+			4,t:30;
+			3,1:10;
+			4,2:10;
+			2,3:15::near start;
+			4,1:5::near start;
+		}
+		\resizedAdigraph{
+			s,3,4,2,t::green;
+			s,1,2::red;
 		}
 	\end{subfigure}
 \end{figure}
@@ -1004,7 +1086,7 @@ The following is to add cuts to show minimum cuts for example, the syntax is: \t
 	3,4;
 	2,t;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{}{
@@ -1025,7 +1107,7 @@ If you'd like to color the cuts you just have to add the color as follows: \text
 	2,t,blue;
 	2,4,green;
 }
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\myAdigraph{}{
@@ -1049,7 +1131,7 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -1060,9 +1142,9 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 	4,2:10;
 	2,3:15::near start;
 	4,1:5::near start;
-}[-]
+	}[-]
 \myCustomEdgesAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\NewAdigraph{myCustomEdgesAdigraph}{
@@ -1072,7 +1154,7 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 			2:6,2;
 			4:6,-2;
 			t:8,0;
-		}{
+			}{
 			s,1:25;
 			s,3:25;
 			3,4:25;
@@ -1083,7 +1165,7 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 			4,2:10;
 			2,3:15::near start;
 			4,1:5::near start;
-		}[-]
+			}[-]
 		\myCustomEdgesAdigraph{}
 	\end{subfigure}
 \end{figure}
@@ -1099,7 +1181,7 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 	2:6,2;
 	4:6,-2;
 	t:8,0;
-}{
+	}{
 	s,1:25;
 	s,3:25;
 	3,4:25;
@@ -1110,9 +1192,9 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 	4,2:10;
 	2,3:15::near start;
 	4,1:5::near start;
-}[dashed]
+	}[dashed]
 \myCustomEdgesAdigraph{}
-\end{minted}
+		\end{minted}
 	\end{subfigure}
 	\begin{subfigure}{0.49\textwidth}
 		\NewAdigraph{myCustomEdgesAdigraph}{
@@ -1122,7 +1204,7 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 			2:6,2;
 			4:6,-2;
 			t:8,0;
-		}{
+			}{
 			s,1:25;
 			s,3:25;
 			3,4:25;
@@ -1133,7 +1215,7 @@ If you need non oriented edges or in general to ad a custom style to your edges 
 			4,2:10;
 			2,3:15::near start;
 			4,1:5::near start;
-		}[dashed]
+			}[dashed]
 		\myCustomEdgesAdigraph{}
 	\end{subfigure}
 \end{figure}
@@ -1155,23 +1237,23 @@ from pyadigraph import Adigraph
 import networkx as nx
 
 A = Adigraph(
-    vertices_color_fallback="gray!90",
-    edges_color_fallback="gray!90",
-    sub_caption="My adigraph number {i} of {n}",
-    sub_label="adigraph_{i}_{n}",
-    row_size=1,
-    caption="A graph generated with python and latex.",
-    label="pyadigraph_example"
+vertices_color_fallback="gray!90",
+edges_color_fallback="gray!90",
+sub_caption="My adigraph number {i} of {n}",
+sub_label="adigraph_{i}_{n}",
+row_size=1,
+caption="A graph generated with python and latex.",
+label="pyadigraph_example"
 )
 
 A.add_graph(
-    nx.bipartite.random_graph(4, 4, 1),
-    vertices_color={
-        0: 'red!90',
-        1: 'red!90',
-        4: 'cyan!90',
-        7: 'cyan!90'
-    })
+nx.bipartite.random_graph(4, 4, 1),
+vertices_color={
+	0: 'red!90',
+	1: 'red!90',
+	4: 'cyan!90',
+	7: 'cyan!90'
+})
 
 A.save("test/result.tex", document=True)
 \end{minted}
@@ -1180,45 +1262,45 @@ A.save("test/result.tex", document=True)
 You automatically obtain the following latex:
 
 \begin{minted}{latex}
-\documentclass{report}
-\usepackage{adigraph}
-\usepackage{subcaption}
-
-\begin{document}
-\begin{figure}
-    \begin{subfigure}{1.0\textwidth}
-        \NewAdigraph{myAdigraph}{
-            0,red!90,:-0.4386601404141742\textwidth,0.2091077552922947\textwidth:;
-            1,red!90,:-0.15708496776680972\textwidth,0.09630690244229406\textwidth:;
-            2,gray!90,:0.43887677279554366\textwidth,-0.2079924280020609\textwidth:;
-            3,gray!90,:0.15678823839504888\textwidth,-0.09746320565948384\textwidth:;
-            4,cyan!90,:-0.3736460590634439\textwidth,-0.327631363498189\textwidth:;
-            5,gray!90,:0.3735687548614322\textwidth,0.3275275669374224\textwidth:;
-            6,gray!90,:-0.042735184609099336\textwidth,-0.4998552275122768\textwidth:;
-            7,cyan!90,:0.0428925858015027\textwidth,0.5\textwidth:;
-        }{
-            0,4,gray!90,::;
-            0,5,gray!90,::;
-            0,6,gray!90,::;
-            0,7,gray!90,::;
-            1,4,gray!90,::;
-            1,5,gray!90,::;
-            1,6,gray!90,::;
-            1,7,gray!90,::;
-            2,4,gray!90,::;
-            2,5,gray!90,::;
-            2,6,gray!90,::;
-            2,7,gray!90,::;
-            3,4,gray!90,::;
-            3,5,gray!90,::;
-            3,6,gray!90,::;
-            3,7,gray!90,::;
-        }[]
-        \myAdigraph{}
-    \caption{My adigraph number 1 of 1}\label{adigraph_1_1}
-    \end{subfigure}
-    \caption{A graph generated with python and latex.}\label{pyadigraph_example}
-\end{figure}
+	\documentclass{report}
+	\usepackage{adigraph}
+	\usepackage{subcaption}
+	
+	\begin{document}
+	\begin{figure}
+		\begin{subfigure}{1.0\textwidth}
+			\NewAdigraph{myAdigraph}{
+				0,red!90,:-0.4386601404141742\textwidth,0.2091077552922947\textwidth:;
+				1,red!90,:-0.15708496776680972\textwidth,0.09630690244229406\textwidth:;
+				2,gray!90,:0.43887677279554366\textwidth,-0.2079924280020609\textwidth:;
+				3,gray!90,:0.15678823839504888\textwidth,-0.09746320565948384\textwidth:;
+				4,cyan!90,:-0.3736460590634439\textwidth,-0.327631363498189\textwidth:;
+				5,gray!90,:0.3735687548614322\textwidth,0.3275275669374224\textwidth:;
+				6,gray!90,:-0.042735184609099336\textwidth,-0.4998552275122768\textwidth:;
+				7,cyan!90,:0.0428925858015027\textwidth,0.5\textwidth:;
+				}{
+				0,4,gray!90,::;
+				0,5,gray!90,::;
+				0,6,gray!90,::;
+				0,7,gray!90,::;
+				1,4,gray!90,::;
+				1,5,gray!90,::;
+				1,6,gray!90,::;
+				1,7,gray!90,::;
+				2,4,gray!90,::;
+				2,5,gray!90,::;
+				2,6,gray!90,::;
+				2,7,gray!90,::;
+				3,4,gray!90,::;
+				3,5,gray!90,::;
+				3,6,gray!90,::;
+				3,7,gray!90,::;
+				}[]
+			\myAdigraph{}
+			\caption{My adigraph number 1 of 1}\label{adigraph_1_1}
+		\end{subfigure}
+		\caption{A graph generated with python and latex.}\label{pyadigraph_example}
+	\end{figure}
 \end{document}
 \end{minted}
 
@@ -1231,13 +1313,13 @@ And once you compile that you receive a graph like the following:
 If for some reason you need to disable all the adigraphs in your latex code, for example using an online editor such as Overleaf that allows only a given maximum compile time, you can use the following command:
 
 \begin{minted}{latex}
-	\DisableAdigraphs
+\DisableAdigraphs
 \end{minted}
 
 You can then re-enable adigraphs with:
 
 \begin{minted}{latex}
-	\EnableAdigraphs
+\EnableAdigraphs
 \end{minted}
 
 \chapter{Warnings}
@@ -1280,6 +1362,7 @@ I reserve to use for the package the following tokens:
 		\item \textbackslash NewAdigraph
 		\item \textbackslash RenewAdigraph
 		\item \textbackslash DisableAdigraphs
+		\item \textbackslash AdigraphNodeMinSize
 	\end{enumerate}
 \end{multicols}
 

@@ -1,7 +1,7 @@
 # Adigraph
 [![Build status](https://github.com/LucaCappelletti94/adigraph/actions/workflows/latex.yml/badge.svg)](https://github.com/LucaCappelletti94/adigraph/actions)
 [![Version](https://img.shields.io/badge/CTAN_Version-1.7.2-blue.svg)](https://ctan.org/pkg/adigraph)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/LucaCappelletti94/adigraph/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/LucaCappelletti94/adigraph/blob/main/LICENSE)
 [![Available in](https://img.shields.io/badge/Available_in-TEX_Live-green.svg)](https://ctan.org/pkg/texlive)
 [![Available in](https://img.shields.io/badge/Available_in-MiKTEX-green.svg)](https://ctan.org/pkg/miktex)
 
@@ -12,7 +12,7 @@ It handles automatically the positioning of labels, with the exception of the ho
 **This library is released under MIT license (Copyright 2018 Luca Cappelletti)**.
 
 ## Documentation
-For more information, you can read the documentation available [here](https://github.com/LucaCappelletti94/adigraph/blob/master/adigraph_documentation.pdf)
+For more information, you can read the documentation available [here](https://github.com/LucaCappelletti94/adigraph/blob/main/adigraph_documentation.pdf)
 
 ## Basic setup
 ### Installing the package
@@ -46,11 +46,11 @@ Remember to require the package in the document.
 ```
 
 ## Basic example
-More examples and step by step explanation is available in the [documentation](https://github.com/LucaCappelletti94/adigraph/blob/master/adigraph_documentation.pdf).
+More examples and step by step explanation is available in the [documentation](https://github.com/LucaCappelletti94/adigraph/blob/main/adigraph_documentation.pdf).
 
 Suppose you want to create a graph as the following, with an augmenting path highlighted and a couple of cuts:
 
-![Basic example](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true)
+![Basic example](https://github.com/LucaCappelletti94/adigraph/blob/main/img_examples/example_3.jpg?raw=true)
 
 We start by defining a new graph, called *myAdigraph*:
 
@@ -82,7 +82,7 @@ At this point the output is the following:
 \myAdigraph{}
 ```
 
-![First adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_0.jpg?raw=true)
+![First adigraph](https://github.com/LucaCappelletti94/adigraph/blob/main/img_examples/example_0.jpg?raw=true)
 
 Then we can add the augmenting path as follows:
 
@@ -92,7 +92,7 @@ Then we can add the augmenting path as follows:
 }
 ```
 
-![Augmenting adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_1.jpg?raw=true)
+![Augmenting adigraph](https://github.com/LucaCappelletti94/adigraph/blob/main/img_examples/example_1.jpg?raw=true)
 
 And the cuts (remember that the paths from previous steps are memorized by the library) are added as follows:
 
@@ -105,7 +105,7 @@ And the cuts (remember that the paths from previous steps are memorized by the l
 
 The result with the cuts is the following:
 
-![Cuts adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_2.jpg?raw=true)
+![Cuts adigraph](https://github.com/LucaCappelletti94/adigraph/blob/main/img_examples/example_2.jpg?raw=true)
 
 You can add both cuts and paths at the same time to keep the latest path highlighted:
 
@@ -118,7 +118,7 @@ You can add both cuts and paths at the same time to keep the latest path highlig
 }
 ```
 
-![Cuts adigraph](https://github.com/LucaCappelletti94/adigraph/blob/master/img_examples/example_3.jpg?raw=true)
+![Cuts adigraph](https://github.com/LucaCappelletti94/adigraph/blob/main/img_examples/example_3.jpg?raw=true)
 
 Have a nice day!
 

@@ -8,10 +8,10 @@
 \usepackage{xcolor}
 \usepackage[colorlinks=true,urlcolor=blue,pdfpagelabels,hyperindex=false]{hyperref}
 \usepackage{minted}
-\usepackage{multicol}
 \usepackage{graphicx} % for images and generally graphics
 \usepackage{caption} % enabling of nice captions
 \usepackage{subcaption} % and subcaptions of images
+\usepackage{multicol}
 \definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
 \setminted{
   bgcolor=mintedbackground,
@@ -37,13 +37,6 @@
 % THE FOLLOWING CENTERS ALL FLOATING ITEMS BY DEFAULT   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\makeatletter
-\g@addto@macro\@floatboxreset\centering
-\makeatother
-
-\makeatletter
-\apptocmd\subcaption@minipage{\centering}{}{}
-\makeatother
 
 \makeatletter
 \providecommand*\setfloatlocations[2]{\@namedef{fps@#1}{#2}}

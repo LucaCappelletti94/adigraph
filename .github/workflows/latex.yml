@@ -23,9 +23,16 @@ jobs:
     - name: Install Pygments for minted
       run: sudo apt-get install python3-pygments -y
 
-    - name: Compile LaTeX file
+    - name: Compile Documentation LaTeX file
       run: |
         pdflatex -interaction=nonstopmode -shell-escape adigraph_documentation.tex
         bibtex adigraph_documentation
         pdflatex -interaction=nonstopmode -shell-escape adigraph_documentation.tex
         pdflatex -interaction=nonstopmode -shell-escape adigraph_documentation.tex
+    
+    - name: Compile Test LaTeX file
+      run: |
+          pdflatex -interaction=nonstopmode -shell-escape adigraph_working_test.tex
+          bibtex adigraph_working_test
+          pdflatex -interaction=nonstopmode -shell-escape adigraph_working_test.tex
+          pdflatex -interaction=nonstopmode -shell-escape adigraph_working_test.tex

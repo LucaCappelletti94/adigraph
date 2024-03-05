@@ -1,4 +1,9 @@
 # Adigraph
+[![Version](https://img.shields.io/badge/Version-1.7.2-green.svg)](https://ctan.org/pkg/adigraph)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/LucaCappelletti94/adigraph/blob/master/LICENSE)
+[![Available in](https://img.shields.io/badge/Available_in-TEX_Live-green.svg)](https://ctan.org/pkg/texlive)
+[![Available in](https://img.shields.io/badge/Available_in-miktex-green.svg)](https://ctan.org/pkg/texlive)
+
 [Adigraph](https://ctan.org/pkg/adigraph) is a pure latex library for drawing directed graphs and augmenting directed graphs, and to draw cuts over them. It DOES NOT require external libraries such as Graphviz or DOT. 
 
 It handles automatically the positioning of labels, with the exception of the horizontal position, and the inclinations of cuts.

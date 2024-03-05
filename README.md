@@ -1,6 +1,6 @@
 # Adigraph
 [![Version](https://img.shields.io/badge/Version-1.7.2-green.svg)](https://ctan.org/pkg/adigraph)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/LucaCappelletti94/adigraph/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/LucaCappelletti94/adigraph/blob/master/LICENSE)
 [![Available in](https://img.shields.io/badge/Available_in-TEX_Live-green.svg)](https://ctan.org/pkg/texlive)
 [![Available in](https://img.shields.io/badge/Available_in-miktex-green.svg)](https://ctan.org/pkg/texlive)
 
